@@ -1,0 +1,1717 @@
+{
+ "id": "bodegon-lacade",
+ "nombre": "Bodegón LACADÉ",
+ "pais": "AR",
+ "idioma": "es",
+ "modo": "demo",
+ "whatsapp": "5491125902215",
+ "prefijoPedido": "LC",
+ "supabase": {
+  "url": "",
+  "anonKey": ""
+ },
+ "marca": {
+  "logo": "img/logo-noche.svg",
+  "logoPanel": "img/logo-blanco.svg",
+  "favicon": "img/favicon.svg",
+  "colores": {
+   "fondo": "#E8E8E8",
+   "superficie": "#FFFFFF",
+   "texto": "#172941",
+   "primario": "#0148A2",
+   "sobrePrimario": "#FFFFFF",
+   "acento": "#019BD7",
+   "sobreAcento": "#172941",
+   "borde": "#B2B2B2"
+  },
+  "fuentes": {
+   "titulos": "'Big Shoulders Display', 'Arial Narrow', sans-serif",
+   "texto": "'Adventor', 'Century Gothic', system-ui, sans-serif",
+   "googleFonts": ""
+  },
+  "estilo": {
+   "forma": "recta",
+   "radio": "4px",
+   "sombra": "suave",
+   "borde": "1.5px",
+   "mayusculas": true
+  }
+ },
+ "modulos": {
+  "carta": true,
+  "carrito": true,
+  "reservas": true,
+  "admin": true
+ },
+ "horarios": {
+  "lun": [],
+  "mar": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ],
+  "mie": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ],
+  "jue": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ],
+  "vie": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ],
+  "sab": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ],
+  "dom": [
+   [
+    "09:00",
+    "23:30"
+   ]
+  ]
+ },
+ "reservas": {
+  "capacidad": 150,
+  "maxPersonas": 12,
+  "anticipacionMin": 60,
+  "diasAdelante": 30,
+  "cerrados": [],
+  "servicios": [
+   {
+    "id": "almuerzo",
+    "nombre": "Almuerzo",
+    "dias": [
+     "mar",
+     "mie",
+     "jue",
+     "vie",
+     "sab",
+     "dom"
+    ],
+    "tandas": [
+     {
+      "nombre": "Primer tiempo",
+      "turnos": [
+       "12:00",
+       "12:15",
+       "12:30"
+      ]
+     },
+     {
+      "nombre": "Segundo tiempo",
+      "turnos": [
+       "13:45",
+       "14:00",
+       "14:15"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "cena",
+    "nombre": "Cena",
+    "dias": [
+     "mar",
+     "mie",
+     "jue",
+     "vie",
+     "sab",
+     "dom"
+    ],
+    "tandas": [
+     {
+      "nombre": "Primer tiempo",
+      "turnos": [
+       "20:00",
+       "20:15",
+       "20:30"
+      ]
+     },
+     {
+      "nombre": "Segundo tiempo",
+      "turnos": [
+       "22:15",
+       "22:30",
+       "22:45"
+      ]
+     }
+    ]
+   }
+  ],
+  "extras": [
+   {
+    "id": "socio",
+    "label": "Soy socio/a de Racing"
+   },
+   {
+    "id": "cumple",
+    "label": "Venimos a festejar un cumple"
+   }
+  ]
+ },
+ "pedidos": {
+  "salidas": [
+   "mercadopago",
+   "whatsapp"
+  ],
+  "tipos": [
+   "retiro"
+  ],
+  "envio": 0,
+  "minimo": 0
+ },
+ "pagos": {
+  "mercadopago": {
+   "endpoint": "https://kit-demos-amf.vercel.app/api/mp-preference",
+   "modo": "sandbox"
+  }
+ },
+ "giftcards": {
+  "nombre": "Gift card Lacadé",
+  "prefijo": "LCD",
+  "validezDias": 60,
+  "montos": [
+   50000,
+   75000,
+   100000,
+   150000,
+   200000
+  ]
+ },
+ "socios": {
+  "descuento": 10,
+  "condicion": "en efectivo"
+ },
+ "carta": {
+  "grupos": [
+   {
+    "id": "almuerzo-cena",
+    "nombre": "Almuerzo y cena",
+    "categorias": [
+     "entradas",
+     "parri",
+     "tortillas",
+     "milanesas",
+     "principales",
+     "pastas",
+     "salsas",
+     "parrilla",
+     "guarniciones",
+     "ensaladas",
+     "kids",
+     "postres"
+    ]
+   },
+   {
+    "id": "cafeteria",
+    "nombre": "Cafetería y brunch",
+    "categorias": [
+     "cafe",
+     "salados",
+     "jugos",
+     "dulces",
+     "combos"
+    ]
+   },
+   {
+    "id": "barra",
+    "nombre": "Barra y vinos",
+    "categorias": [
+     "bebidas",
+     "cervezas",
+     "tragos",
+     "vinos"
+    ]
+   },
+   {
+    "id": "merch",
+    "nombre": "Merch",
+    "categorias": [
+     "merch"
+    ]
+   },
+   {
+    "id": "ejecutivo",
+    "nombre": "Ejecutivo",
+    "categorias": [
+     "ejecutivo"
+    ]
+   }
+  ],
+  "categorias": [
+   {
+    "id": "entradas",
+    "nombre": "Entradas"
+   },
+   {
+    "id": "parri",
+    "nombre": "Entradas parri"
+   },
+   {
+    "id": "tortillas",
+    "nombre": "Tortillas",
+    "nota": "Todas son para compartir"
+   },
+   {
+    "id": "milanesas",
+    "nombre": "Milanesas",
+    "nota": "Con papas y batatas fritas"
+   },
+   {
+    "id": "principales",
+    "nombre": "Principales",
+    "nota": "Sugerencias del chef"
+   },
+   {
+    "id": "pastas",
+    "nombre": "Pastas",
+    "nota": "Con la salsa que elijas"
+   },
+   {
+    "id": "salsas",
+    "nombre": "Salsas",
+    "nota": "Elegí tu gusto"
+   },
+   {
+    "id": "parrilla",
+    "nombre": "Parrilla",
+    "nota": "No incluye guarnición"
+   },
+   {
+    "id": "guarniciones",
+    "nombre": "Guarniciones"
+   },
+   {
+    "id": "ensaladas",
+    "nombre": "Ensaladas"
+   },
+   {
+    "id": "kids",
+    "nombre": "Menú kids",
+    "nota": "Hasta 12 años"
+   },
+   {
+    "id": "postres",
+    "nombre": "Postres"
+   },
+   {
+    "id": "cafe",
+    "nombre": "Cafetería"
+   },
+   {
+    "id": "salados",
+    "nombre": "Salados"
+   },
+   {
+    "id": "jugos",
+    "nombre": "Jugos y licuados"
+   },
+   {
+    "id": "dulces",
+    "nombre": "Dulces"
+   },
+   {
+    "id": "combos",
+    "nombre": "Combos y brunch"
+   },
+   {
+    "id": "bebidas",
+    "nombre": "Bebidas"
+   },
+   {
+    "id": "cervezas",
+    "nombre": "Cervezas"
+   },
+   {
+    "id": "tragos",
+    "nombre": "Tragos"
+   },
+   {
+    "id": "vinos",
+    "nombre": "Vinos",
+    "nota": "De la casa, Escorihuela Gascón, Salentein, Catena Zapata y espumantes"
+   },
+   {
+    "id": "merch",
+    "nombre": "Merchandising",
+    "nota": "¿Tu mesa? De Lacadé, por supuesto"
+   },
+   {
+    "id": "ejecutivo",
+    "nombre": "Menú ejecutivo",
+    "nota": "Al mediodía"
+   }
+  ],
+  "productos": [
+   {
+    "id": "emp-carne",
+    "categoria": "entradas",
+    "nombre": "Empanada de carne cortada a cuchillo",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": [],
+    "foto": "img/mesa-800.webp"
+   },
+   {
+    "id": "emp-jyq",
+    "categoria": "entradas",
+    "nombre": "Empanada de jamón y queso",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": []
+   },
+   {
+    "id": "emp-bondiola",
+    "categoria": "entradas",
+    "nombre": "Empanada de bondiola a la barbacoa",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": []
+   },
+   {
+    "id": "croquetas",
+    "categoria": "entradas",
+    "nombre": "Croquetas de papa",
+    "descripcion": "Rellenas de panceta y muzza.",
+    "precio": 13500,
+    "etiquetas": []
+   },
+   {
+    "id": "bastones",
+    "categoria": "entradas",
+    "nombre": "Bastones de muzzarella",
+    "descripcion": "",
+    "precio": 14500,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "gramajo",
+    "categoria": "entradas",
+    "nombre": "Revuelto Gramajo",
+    "descripcion": "",
+    "precio": 15500,
+    "etiquetas": []
+   },
+   {
+    "id": "bunuelos",
+    "categoria": "entradas",
+    "nombre": "Buñuelos de verdura",
+    "descripcion": "",
+    "precio": 16500,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "rabas",
+    "categoria": "entradas",
+    "nombre": "Rabas con tártara",
+    "descripcion": "",
+    "precio": 22500,
+    "etiquetas": []
+   },
+   {
+    "id": "chorizo",
+    "categoria": "parri",
+    "nombre": "Chorizo",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": []
+   },
+   {
+    "id": "morcilla",
+    "categoria": "parri",
+    "nombre": "Morcilla",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": []
+   },
+   {
+    "id": "chanchilines",
+    "categoria": "parri",
+    "nombre": "“Chanchi”lines",
+    "descripcion": "",
+    "precio": 14000,
+    "etiquetas": []
+   },
+   {
+    "id": "provoleta",
+    "categoria": "parri",
+    "nombre": "Provoleta",
+    "descripcion": "",
+    "precio": 15000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "provoleta-cilindro",
+    "categoria": "parri",
+    "nombre": "Provoleta “El Cilindro”",
+    "descripcion": "Rellena de morrón, panceta y pesto.",
+    "precio": 17500,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/provoleta-800.webp"
+   },
+   {
+    "id": "tortilla",
+    "categoria": "tortillas",
+    "nombre": "Tortilla de papa",
+    "descripcion": "",
+    "precio": 17500,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "tortilla-esp",
+    "categoria": "tortillas",
+    "nombre": "Tortilla de papa española",
+    "descripcion": "",
+    "precio": 19500,
+    "etiquetas": []
+   },
+   {
+    "id": "tortilla-rellena",
+    "categoria": "tortillas",
+    "nombre": "Tortilla de papa rellena",
+    "descripcion": "De jamón, muzza, morrón y cebolla caramelizada.",
+    "precio": 21500,
+    "etiquetas": []
+   },
+   {
+    "id": "sup-napo",
+    "categoria": "milanesas",
+    "nombre": "Suprema napolitana",
+    "descripcion": "Para 2 personas.",
+    "precio": 36500,
+    "etiquetas": []
+   },
+   {
+    "id": "sup-fugazzeta",
+    "categoria": "milanesas",
+    "nombre": "Suprema fugazzeta",
+    "descripcion": "Para 2 personas.",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "sup-4q",
+    "categoria": "milanesas",
+    "nombre": "Suprema 4 quesos",
+    "descripcion": "Para 2 personas.",
+    "precio": 38500,
+    "etiquetas": []
+   },
+   {
+    "id": "mila-napo",
+    "categoria": "milanesas",
+    "nombre": "Milanesa napolitana",
+    "descripcion": "Para 2 personas.",
+    "precio": 42000,
+    "etiquetas": []
+   },
+   {
+    "id": "mila-fugazzeta",
+    "categoria": "milanesas",
+    "nombre": "Milanesa fugazzeta",
+    "descripcion": "Para 2 personas.",
+    "precio": 42500,
+    "etiquetas": []
+   },
+   {
+    "id": "mila-4q",
+    "categoria": "milanesas",
+    "nombre": "Milanesa 4 quesos",
+    "descripcion": "Para 2 personas.",
+    "precio": 43500,
+    "etiquetas": []
+   },
+   {
+    "id": "cilindronesa",
+    "categoria": "milanesas",
+    "nombre": "Cilindronesa de carne rellena",
+    "descripcion": "Para 1 persona. Con tomate, jamón cocido y muzza.",
+    "precio": 31000,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "militonesa",
+    "categoria": "milanesas",
+    "nombre": "Militonesa de carne rellena",
+    "descripcion": "Para 4 personas. Con cheddar, cebolla caramelizada y panceta ahumada.",
+    "precio": 75000,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/mila-800.webp"
+   },
+   {
+    "id": "lichanesa",
+    "categoria": "milanesas",
+    "nombre": "Lichanesa de carne rellena",
+    "descripcion": "Para 4 personas. Con espinacas y provolone.",
+    "precio": 75000,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "escalope",
+    "categoria": "principales",
+    "nombre": "Escalope de lomo",
+    "descripcion": "Con batatas fritas.",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "bondiola-merlo",
+    "categoria": "principales",
+    "nombre": "Bondiola a la Mostaza Merlo",
+    "descripcion": "Con puré de batatas.",
+    "precio": 37500,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "pollo-verdeo",
+    "categoria": "principales",
+    "nombre": "Pollo al verdeo",
+    "descripcion": "Con papas noisette.",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "risotto",
+    "categoria": "principales",
+    "nombre": "Risotto de pollo y champiñón",
+    "descripcion": "",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "matambre-pizzuti",
+    "categoria": "principales",
+    "nombre": "Matambre de ternera a la “Pizzuti”",
+    "descripcion": "Con fritas.",
+    "precio": 40500,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "vacio-imperial",
+    "categoria": "principales",
+    "nombre": "Vacío Imperial",
+    "descripcion": "Al horno con papas y vegetales.",
+    "precio": 41500,
+    "etiquetas": []
+   },
+   {
+    "id": "lomo-champi",
+    "categoria": "principales",
+    "nombre": "Lomo al champiñón",
+    "descripcion": "Con milhojas de papas.",
+    "precio": 44500,
+    "etiquetas": []
+   },
+   {
+    "id": "tallarines",
+    "categoria": "pastas",
+    "nombre": "Tallarines",
+    "descripcion": "",
+    "precio": 14000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "noquis",
+    "categoria": "pastas",
+    "nombre": "Ñoquis de papa",
+    "descripcion": "",
+    "precio": 14000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "sorr-bondiola",
+    "categoria": "pastas",
+    "nombre": "Sorrentinos de bondiola",
+    "descripcion": "Con barbacoa.",
+    "precio": 17000,
+    "etiquetas": []
+   },
+   {
+    "id": "sorr-academicos",
+    "categoria": "pastas",
+    "nombre": "Sorrentinos Académicos",
+    "descripcion": "De jamón y queso.",
+    "precio": 19000,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/sorrentinos-800.webp"
+   },
+   {
+    "id": "lasagna",
+    "categoria": "pastas",
+    "nombre": "Lasagna de carne y verdura",
+    "descripcion": "",
+    "precio": 21500,
+    "etiquetas": []
+   },
+   {
+    "id": "s-filetto",
+    "categoria": "salsas",
+    "nombre": "Filetto, blanca o mixta",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "s-scarparo",
+    "categoria": "salsas",
+    "nombre": "Scarparo",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": []
+   },
+   {
+    "id": "s-hongos",
+    "categoria": "salsas",
+    "nombre": "Crema de hongos",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "s-bolognesa",
+    "categoria": "salsas",
+    "nombre": "Bolognesa",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": []
+   },
+   {
+    "id": "s-4q",
+    "categoria": "salsas",
+    "nombre": "4 quesos",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "asado-mariscal",
+    "categoria": "parrilla",
+    "nombre": "Asado del “Mariscal”",
+    "descripcion": "",
+    "precio": 34500,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "ojo-bife",
+    "categoria": "parrilla",
+    "nombre": "Ojo de bife (600 g)",
+    "descripcion": "",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "bife-chorizo",
+    "categoria": "parrilla",
+    "nombre": "Bife de chorizo (600 g)",
+    "descripcion": "",
+    "precio": 37500,
+    "etiquetas": []
+   },
+   {
+    "id": "bife-costas",
+    "categoria": "parrilla",
+    "nombre": "Gran Bife “Costas” (600 g)",
+    "descripcion": "Con panceta ahumada, provoleta, cebolla y huevo frito.",
+    "precio": 39500,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/bife-800.webp"
+   },
+   {
+    "id": "entrana-maravilla",
+    "categoria": "parrilla",
+    "nombre": "Entraña “Maravilla” (500 g)",
+    "descripcion": "Con chimi ahumado.",
+    "precio": 44500,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/mesa-800.webp"
+   },
+   {
+    "id": "parrillada-2",
+    "categoria": "parrilla",
+    "nombre": "Parrillada para 2",
+    "descripcion": "Chori, morci, chinchu, vacío, bondiola, asado y pollo.",
+    "precio": 62000,
+    "etiquetas": []
+   },
+   {
+    "id": "parrillada-4",
+    "categoria": "parrilla",
+    "nombre": "Parrillada para 4",
+    "descripcion": "Chori, morci, chinchu, vacío, bondiola, asado y pollo.",
+    "precio": 99000,
+    "etiquetas": []
+   },
+   {
+    "id": "papas",
+    "categoria": "guarniciones",
+    "nombre": "Papas fritas",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "batatas",
+    "categoria": "guarniciones",
+    "nombre": "Batatas fritas",
+    "descripcion": "",
+    "precio": 7000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "pure",
+    "categoria": "guarniciones",
+    "nombre": "Puré de papas",
+    "descripcion": "",
+    "precio": 7000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "mixta",
+    "categoria": "guarniciones",
+    "nombre": "Ensalada mixta",
+    "descripcion": "",
+    "precio": 7000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "rucula",
+    "categoria": "guarniciones",
+    "nombre": "Rúcula y parmesano",
+    "descripcion": "",
+    "precio": 9000,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "milhojas",
+    "categoria": "guarniciones",
+    "nombre": "Milhojas de papa gratinado",
+    "descripcion": "",
+    "precio": 9500,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "papa-gloria",
+    "categoria": "guarniciones",
+    "nombre": "Papa rellena de gloria",
+    "descripcion": "Con panceta, ciboulette y mix de quesos.",
+    "precio": 9500,
+    "etiquetas": []
+   },
+   {
+    "id": "ens-5",
+    "categoria": "ensaladas",
+    "nombre": "Ensalada 5 ingredientes",
+    "descripcion": "",
+    "precio": 14500,
+    "etiquetas": [
+     "veggie"
+    ]
+   },
+   {
+    "id": "cesar",
+    "categoria": "ensaladas",
+    "nombre": "Ensalada César",
+    "descripcion": "",
+    "precio": 17500,
+    "etiquetas": []
+   },
+   {
+    "id": "ens-casa",
+    "categoria": "ensaladas",
+    "nombre": "Ensalada de la casa",
+    "descripcion": "Verdes, palta, huevo, pollo grillado, cherrys confitados, zanahoria rallada y queso en cubos.",
+    "precio": 18500,
+    "etiquetas": []
+   },
+   {
+    "id": "adic-palta",
+    "categoria": "ensaladas",
+    "nombre": "Adicional de palta",
+    "descripcion": "",
+    "precio": 2000,
+    "etiquetas": []
+   },
+   {
+    "id": "adic-pollo",
+    "categoria": "ensaladas",
+    "nombre": "Adicional de pollo",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "kids-mila",
+    "categoria": "kids",
+    "nombre": "Milanesa con papas fritas",
+    "descripcion": "",
+    "precio": 18500,
+    "etiquetas": []
+   },
+   {
+    "id": "kids-fingers",
+    "categoria": "kids",
+    "nombre": "Chicken fingers con papas y barbacoa",
+    "descripcion": "",
+    "precio": 18500,
+    "etiquetas": []
+   },
+   {
+    "id": "kids-noquis",
+    "categoria": "kids",
+    "nombre": "Ñoquis con salsa a elección",
+    "descripcion": "",
+    "precio": 18500,
+    "etiquetas": []
+   },
+   {
+    "id": "flancella",
+    "categoria": "postres",
+    "nombre": "Flancella (DDL, crema o mixto)",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "budin",
+    "categoria": "postres",
+    "nombre": "Budín de pan (DDL, crema o mixto)",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "panqueque",
+    "categoria": "postres",
+    "nombre": "Panqueque de dulce de leche",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "brownie",
+    "categoria": "postres",
+    "nombre": "Brownie con helado",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "tirami-zucu",
+    "categoria": "postres",
+    "nombre": "Tirami“Zucu”",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/tirami-800.webp"
+   },
+   {
+    "id": "mousse",
+    "categoria": "postres",
+    "nombre": "Mousse de chocolate",
+    "descripcion": "",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "volcan-chelo",
+    "categoria": "postres",
+    "nombre": "Volcán “Chelo Díaz” de dulce de leche",
+    "descripcion": "Con helado de banana.",
+    "precio": 15000,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "volcan-choco",
+    "categoria": "postres",
+    "nombre": "Volcán de chocolate",
+    "descripcion": "Con helado de americana.",
+    "precio": 15000,
+    "etiquetas": []
+   },
+   {
+    "id": "copa-locademia",
+    "categoria": "postres",
+    "nombre": "Copa Locademia",
+    "descripcion": "Helado con brownie, crema, dulce de leche, oreo y salsa de chocolate.",
+    "precio": 15000,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "expresso",
+    "categoria": "cafe",
+    "nombre": "Expresso",
+    "descripcion": "",
+    "precio": 3000,
+    "etiquetas": []
+   },
+   {
+    "id": "macchiato",
+    "categoria": "cafe",
+    "nombre": "Macchiato",
+    "descripcion": "",
+    "precio": 3200,
+    "etiquetas": []
+   },
+   {
+    "id": "americano",
+    "categoria": "cafe",
+    "nombre": "Americano",
+    "descripcion": "",
+    "precio": 3800,
+    "etiquetas": []
+   },
+   {
+    "id": "americano-cortado",
+    "categoria": "cafe",
+    "nombre": "Americano cortado",
+    "descripcion": "",
+    "precio": 3900,
+    "etiquetas": []
+   },
+   {
+    "id": "doppio",
+    "categoria": "cafe",
+    "nombre": "Doppio",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": []
+   },
+   {
+    "id": "doppio-macchiato",
+    "categoria": "cafe",
+    "nombre": "Doppio macchiato",
+    "descripcion": "",
+    "precio": 4200,
+    "etiquetas": []
+   },
+   {
+    "id": "capuccino",
+    "categoria": "cafe",
+    "nombre": "Capuccino",
+    "descripcion": "",
+    "precio": 4200,
+    "etiquetas": []
+   },
+   {
+    "id": "latte",
+    "categoria": "cafe",
+    "nombre": "Latte",
+    "descripcion": "",
+    "precio": 4200,
+    "etiquetas": []
+   },
+   {
+    "id": "flat-white",
+    "categoria": "cafe",
+    "nombre": "Flat white",
+    "descripcion": "",
+    "precio": 4300,
+    "etiquetas": []
+   },
+   {
+    "id": "te",
+    "categoria": "cafe",
+    "nombre": "Té",
+    "descripcion": "",
+    "precio": 3500,
+    "etiquetas": []
+   },
+   {
+    "id": "leche-almendras",
+    "categoria": "cafe",
+    "nombre": "Opcional leche de almendras",
+    "descripcion": "",
+    "precio": 500,
+    "etiquetas": []
+   },
+   {
+    "id": "scon",
+    "categoria": "salados",
+    "nombre": "Scon de queso",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "scon-relleno",
+    "categoria": "salados",
+    "nombre": "Scon de queso relleno",
+    "descripcion": "Con jamón, queso y tomates secos.",
+    "precio": 7500,
+    "etiquetas": []
+   },
+   {
+    "id": "tostado",
+    "categoria": "salados",
+    "nombre": "Tostado de jamón y queso",
+    "descripcion": "",
+    "precio": 7500,
+    "etiquetas": []
+   },
+   {
+    "id": "avocado",
+    "categoria": "salados",
+    "nombre": "Avocado toast",
+    "descripcion": "Con palta, queso crema, rúcula y tomates secos.",
+    "precio": 8000,
+    "etiquetas": []
+   },
+   {
+    "id": "croissant",
+    "categoria": "salados",
+    "nombre": "Croissant relleno",
+    "descripcion": "Con rúcula, queso danbo, palta y cherry.",
+    "precio": 8500,
+    "etiquetas": []
+   },
+   {
+    "id": "huevos",
+    "categoria": "salados",
+    "nombre": "Huevos revueltos",
+    "descripcion": "Con palta, cherry y tostadas multicereal.",
+    "precio": 10500,
+    "etiquetas": []
+   },
+   {
+    "id": "limonada",
+    "categoria": "jugos",
+    "nombre": "Limonada Lacadé",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "naranja",
+    "categoria": "jugos",
+    "nombre": "Jugo de naranja exprimido",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "licuado",
+    "categoria": "jugos",
+    "nombre": "Licuado del día",
+    "descripcion": "",
+    "precio": 6000,
+    "etiquetas": []
+   },
+   {
+    "id": "medialuna",
+    "categoria": "dulces",
+    "nombre": "Medialuna",
+    "descripcion": "",
+    "precio": 1600,
+    "etiquetas": []
+   },
+   {
+    "id": "alfajor",
+    "categoria": "dulces",
+    "nombre": "Alfajor de nuez",
+    "descripcion": "",
+    "precio": 3500,
+    "etiquetas": []
+   },
+   {
+    "id": "muffin",
+    "categoria": "dulces",
+    "nombre": "Muffin",
+    "descripcion": "",
+    "precio": 3800,
+    "etiquetas": []
+   },
+   {
+    "id": "tostadas",
+    "categoria": "dulces",
+    "nombre": "Tostadas con queso crema y mermelada",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "cookie-brownie",
+    "categoria": "dulces",
+    "nombre": "Cookie de brownie",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": []
+   },
+   {
+    "id": "cookie-frambuesa",
+    "categoria": "dulces",
+    "nombre": "Cookie de frambuesa y chocolate blanco",
+    "descripcion": "",
+    "precio": 4000,
+    "etiquetas": []
+   },
+   {
+    "id": "brownie-cafe",
+    "categoria": "dulces",
+    "nombre": "Brownie",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "torta",
+    "categoria": "dulces",
+    "nombre": "Torta del día",
+    "descripcion": "",
+    "precio": 12000,
+    "etiquetas": []
+   },
+   {
+    "id": "combo-argento",
+    "categoria": "combos",
+    "nombre": "Combo Argento",
+    "descripcion": "1 infusión, 1 jugo de naranja y 2 medialunas.",
+    "precio": 7500,
+    "etiquetas": []
+   },
+   {
+    "id": "combo-fit",
+    "categoria": "combos",
+    "nombre": "Combo Fit",
+    "descripcion": "1 infusión, 1 jugo de naranja, 1 yogurt con granola y huevos revueltos con tostada.",
+    "precio": 12500,
+    "etiquetas": []
+   },
+   {
+    "id": "combo-americano",
+    "categoria": "combos",
+    "nombre": "Combo Americano",
+    "descripcion": "1 infusión, 1 jugo de naranja y bagel con cheddar, panceta ahumada y huevo.",
+    "precio": 14500,
+    "etiquetas": []
+   },
+   {
+    "id": "brunch",
+    "categoria": "combos",
+    "nombre": "Brunch para 2",
+    "descripcion": "2 infusiones, 2 jugos de naranja, torta del día, muffin, croissant con panceta y cheddar, avocado toast, huevos revueltos y tostadas. Opcional: cambiá la infusión y el jugo por 2 Aperol (+$5.000).",
+    "precio": 45000,
+    "etiquetas": []
+   },
+   {
+    "id": "coca",
+    "categoria": "bebidas",
+    "nombre": "Línea Coca 600 cc",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "saborizada",
+    "categoria": "bebidas",
+    "nombre": "Agua saborizada 500 cc",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "agua",
+    "categoria": "bebidas",
+    "nombre": "Agua sin gas 600 cc",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "agua-gas",
+    "categoria": "bebidas",
+    "nombre": "Agua con gas 600 cc",
+    "descripcion": "",
+    "precio": 4500,
+    "etiquetas": []
+   },
+   {
+    "id": "sifon",
+    "categoria": "bebidas",
+    "nombre": "Sifón de soda",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "coca-grande",
+    "categoria": "bebidas",
+    "nombre": "Bebida grande Línea Coca 1,75 L",
+    "descripcion": "",
+    "precio": 10000,
+    "etiquetas": []
+   },
+   {
+    "id": "sin-alcohol",
+    "categoria": "cervezas",
+    "nombre": "Cerveza sin alcohol lata",
+    "descripcion": "",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "stella-lata",
+    "categoria": "cervezas",
+    "nombre": "Stella lata",
+    "descripcion": "",
+    "precio": 7000,
+    "etiquetas": []
+   },
+   {
+    "id": "patagonia",
+    "categoria": "cervezas",
+    "nombre": "Patagonia 700 cc",
+    "descripcion": "",
+    "precio": 11000,
+    "etiquetas": []
+   },
+   {
+    "id": "andes",
+    "categoria": "cervezas",
+    "nombre": "Andes 1 L",
+    "descripcion": "",
+    "precio": 11000,
+    "etiquetas": []
+   },
+   {
+    "id": "stella-1l",
+    "categoria": "cervezas",
+    "nombre": "Stella 1 L",
+    "descripcion": "",
+    "precio": 12500,
+    "etiquetas": []
+   },
+   {
+    "id": "vermu",
+    "categoria": "tragos",
+    "nombre": "Vermú",
+    "descripcion": "",
+    "precio": 8000,
+    "etiquetas": []
+   },
+   {
+    "id": "aperol",
+    "categoria": "tragos",
+    "nombre": "Aperol",
+    "descripcion": "",
+    "precio": 9000,
+    "etiquetas": []
+   },
+   {
+    "id": "campari",
+    "categoria": "tragos",
+    "nombre": "Campari",
+    "descripcion": "",
+    "precio": 9000,
+    "etiquetas": []
+   },
+   {
+    "id": "gin",
+    "categoria": "tragos",
+    "nombre": "Gin tonic",
+    "descripcion": "",
+    "precio": 9000,
+    "etiquetas": []
+   },
+   {
+    "id": "cielito",
+    "categoria": "tragos",
+    "nombre": "El cielito de Costas",
+    "descripcion": "Vodka, óleo de naranja y lima, jugo de lima, Blue curaçao y espumante Extra Brut.",
+    "precio": 9500,
+    "etiquetas": [
+     "idolo"
+    ],
+    "foto": "img/cielito-800.webp"
+   },
+   {
+    "id": "primera",
+    "categoria": "tragos",
+    "nombre": "La primera fue nuestra",
+    "descripcion": "Gin, destilado de pera, almíbar y jugo de lima.",
+    "precio": 9500,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "merlo-trago",
+    "categoria": "tragos",
+    "nombre": "A lo Mostaza Merlo",
+    "descripcion": "Whisky escocés, almíbar de jengibre, limón y mostaza de Dijon.",
+    "precio": 9500,
+    "etiquetas": [
+     "idolo"
+    ]
+   },
+   {
+    "id": "fernetazo",
+    "categoria": "tragos",
+    "nombre": "Fernetazo",
+    "descripcion": "",
+    "precio": 10000,
+    "etiquetas": [],
+    "foto": "img/fernet-800.webp"
+   },
+   {
+    "id": "vino-lacade",
+    "categoria": "vinos",
+    "nombre": "Vino Lacadé",
+    "descripcion": "De la casa.",
+    "precio": 14900,
+    "etiquetas": []
+   },
+   {
+    "id": "pinguino",
+    "categoria": "vinos",
+    "nombre": "Combo pingüino + soda",
+    "descripcion": "De la casa.",
+    "precio": 18900,
+    "etiquetas": []
+   },
+   {
+    "id": "copa-vino",
+    "categoria": "vinos",
+    "nombre": "Copa de vino tinto o blanco",
+    "descripcion": "De la casa.",
+    "precio": 7000,
+    "etiquetas": []
+   },
+   {
+    "id": "fg-malbec",
+    "categoria": "vinos",
+    "nombre": "Familia Gascón Malbec",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 15900,
+    "etiquetas": []
+   },
+   {
+    "id": "fg-chardo",
+    "categoria": "vinos",
+    "nombre": "Familia Gascón Chardonnay",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 15900,
+    "etiquetas": []
+   },
+   {
+    "id": "eg-malbec",
+    "categoria": "vinos",
+    "nombre": "Escorihuela Gascón Malbec",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 19900,
+    "etiquetas": []
+   },
+   {
+    "id": "eg-cf",
+    "categoria": "vinos",
+    "nombre": "Escorihuela Gascón Cabernet Franc",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 19900,
+    "etiquetas": []
+   },
+   {
+    "id": "eg-gr",
+    "categoria": "vinos",
+    "nombre": "Escorihuela Gascón Gran Reserva Malbec",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 25900,
+    "etiquetas": []
+   },
+   {
+    "id": "rosaura",
+    "categoria": "vinos",
+    "nombre": "Rosaura Malbec",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 35000,
+    "etiquetas": []
+   },
+   {
+    "id": "pp-malbec",
+    "categoria": "vinos",
+    "nombre": "Pequeñas Producciones Malbec",
+    "descripcion": "Escorihuela Gascón.",
+    "precio": 44000,
+    "etiquetas": []
+   },
+   {
+    "id": "portillo",
+    "categoria": "vinos",
+    "nombre": "Portillo Malbec / Sauvignon Blanc",
+    "descripcion": "Salentein.",
+    "precio": 15900,
+    "etiquetas": []
+   },
+   {
+    "id": "kilka",
+    "categoria": "vinos",
+    "nombre": "Kilka Malbec",
+    "descripcion": "Salentein.",
+    "precio": 17900,
+    "etiquetas": []
+   },
+   {
+    "id": "sal-reserva",
+    "categoria": "vinos",
+    "nombre": "Salentein Reserva Malbec",
+    "descripcion": "Salentein.",
+    "precio": 21900,
+    "etiquetas": []
+   },
+   {
+    "id": "sal-cf",
+    "categoria": "vinos",
+    "nombre": "Salentein Cabernet Franc",
+    "descripcion": "Salentein.",
+    "precio": 21900,
+    "etiquetas": []
+   },
+   {
+    "id": "alamos",
+    "categoria": "vinos",
+    "nombre": "Alamos Malbec / Cabernet Sauvignon",
+    "descripcion": "Catena Zapata.",
+    "precio": 15900,
+    "etiquetas": []
+   },
+   {
+    "id": "alamos-dulce",
+    "categoria": "vinos",
+    "nombre": "Alamos Dulce Natural",
+    "descripcion": "Catena Zapata.",
+    "precio": 15900,
+    "etiquetas": []
+   },
+   {
+    "id": "nicasia",
+    "categoria": "vinos",
+    "nombre": "Nicasia Red Blend Malbec",
+    "descripcion": "Catena Zapata.",
+    "precio": 19900,
+    "etiquetas": []
+   },
+   {
+    "id": "st-felicien",
+    "categoria": "vinos",
+    "nombre": "Saint Felicien Malbec",
+    "descripcion": "Catena Zapata.",
+    "precio": 23900,
+    "etiquetas": []
+   },
+   {
+    "id": "dv-catena",
+    "categoria": "vinos",
+    "nombre": "DV Catena Malbec - Malbec",
+    "descripcion": "Catena Zapata.",
+    "precio": 44900,
+    "etiquetas": []
+   },
+   {
+    "id": "eg-extra-brut",
+    "categoria": "vinos",
+    "nombre": "Escorihuela Gascón Extra Brut",
+    "descripcion": "Espumante.",
+    "precio": 21900,
+    "etiquetas": []
+   },
+   {
+    "id": "sal-brut",
+    "categoria": "vinos",
+    "nombre": "Salentein Brut Nature",
+    "descripcion": "Espumante.",
+    "precio": 21900,
+    "etiquetas": []
+   },
+   {
+    "id": "chandon",
+    "categoria": "vinos",
+    "nombre": "Chandon",
+    "descripcion": "Espumante.",
+    "precio": 36000,
+    "etiquetas": []
+   },
+   {
+    "id": "baron-b",
+    "categoria": "vinos",
+    "nombre": "Barón B",
+    "descripcion": "Espumante.",
+    "precio": 65000,
+    "etiquetas": []
+   },
+   {
+    "id": "stickers",
+    "categoria": "merch",
+    "nombre": "Stickers académicos",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 1000,
+    "etiquetas": []
+   },
+   {
+    "id": "llavero",
+    "categoria": "merch",
+    "nombre": "Llaveros Lacadé",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 5000,
+    "etiquetas": []
+   },
+   {
+    "id": "camiseta-sifon",
+    "categoria": "merch",
+    "nombre": "Camiseta Sifón histórica",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 10000,
+    "etiquetas": []
+   },
+   {
+    "id": "frapera",
+    "categoria": "merch",
+    "nombre": "Frapera térmica",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 15000,
+    "etiquetas": []
+   },
+   {
+    "id": "mate",
+    "categoria": "merch",
+    "nombre": "Mate Lacadé",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 20000,
+    "etiquetas": []
+   },
+   {
+    "id": "plato-playo",
+    "categoria": "merch",
+    "nombre": "Plato playo",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 20000,
+    "etiquetas": []
+   },
+   {
+    "id": "vaso-fernetero",
+    "categoria": "merch",
+    "nombre": "Vaso Fernetero",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 25000,
+    "etiquetas": [],
+    "foto": "img/fernet-800.webp"
+   },
+   {
+    "id": "plato-hondo",
+    "categoria": "merch",
+    "nombre": "Plato hondo",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 40000,
+    "etiquetas": []
+   },
+   {
+    "id": "pinguino-lacade",
+    "categoria": "merch",
+    "nombre": "Pingüino Lacadé",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 40000,
+    "etiquetas": []
+   },
+   {
+    "id": "copa-libertadores",
+    "categoria": "merch",
+    "nombre": "Copa Libertadores",
+    "descripcion": "Retiro en el bodegón.",
+    "precio": 60000,
+    "etiquetas": []
+   },
+   {
+    "id": "ejecutivo",
+    "categoria": "ejecutivo",
+    "nombre": "Menú ejecutivo del día",
+    "descripcion": "[QUÉ INCLUYE: A CONFIRMAR CON EL LOCAL]",
+    "precio": null,
+    "etiquetas": []
+   }
+  ]
+ },
+ "textos": {
+  "tuPedido": "Tus regalos",
+  "verPedido": "Tus regalos",
+  "carritoVacio": "Todavía no sumaste nada.",
+  "carritoVacioSub": "Regalá una gift card o llevate algo del merch.",
+  "retiro": "Retiro en el bodegón",
+  "reservarMesa": "Reservá tu mesa",
+  "confirmarReserva": "Pedir mi mesa",
+  "reservaLista": "¡Mesa pedida! Juega Lacadé",
+  "reservaListaSub": "{personas} · {dia} a las {hora}. Te confirmamos por WhatsApp.",
+  "comentario": "Algo que tengamos que saber (silla para bebé, alergias…)",
+  "notaPedido": "¿Algo más? (talle de la camiseta, para regalo…)",
+  "sinTurnos": "No quedan turnos para este servicio.",
+  "masPersonas": "Para más de {n} personas escribinos por WhatsApp.",
+  "pedidoListo": "¡Listo!",
+  "pedidoListoSub": "Tu código es {codigo}. El bodegón lo ve en su panel y te escribe por WhatsApp.",
+  "pedidoPagado": "¡Pago aprobado!",
+  "pedidoPagadoSub": "Compra {codigo} pagada. Retirala en el bodegón."
+ }
+}

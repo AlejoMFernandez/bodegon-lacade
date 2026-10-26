@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bodegón LACADÉ · El bodegón de la Academia en Villa del Parque</title>
+<meta name="description" content="El primer bodegón de Racing, en la sede de Villa del Parque (Nogoyá 3065). Reservá almuerzo o cena, mirá la carta con los platos de los ídolos y regalá una gift card. Apto para no socios.">
+<meta name="theme-color" content="#019BD7">
+<link rel="canonical" href="https://bodegon-lacade.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bodegon-lacade.vercel.app/">
+<meta property="og:title" content="Bodegón LACADÉ · El bodegón de la Academia">
+<meta property="og:description" content="Reservá tu mesa, mirá la carta de los ídolos y regalá una gift card. Sede Racing Villa del Parque.">
+<meta property="og:image" content="https://bodegon-lacade.vercel.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bodegon-lacade.vercel.app/img/og.jpg">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" href="fonts/big-shoulders-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/adventor-regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="img/lcd-celeste.svg" as="image">
+<link rel="preload" href="img/bife-1400.webp" as="image" media="(min-width: 900px)">
+<script>
+  // intro sin parpadeo: se decide antes de pintar (sin JS o con movimiento reducido no hay intro)
+  (function () {
+    var d = document.documentElement; d.classList.add('js');
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]sinintro/.test(location.search)) d.classList.add('con-intro'); } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="kit/kit.css?v=14">
+<link rel="stylesheet" href="css/style.css?v=2">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"Bodegón LACADÉ","servesCuisine":"Bodegón argentino","address":{"@type":"PostalAddress","streetAddress":"Nogoyá 3065","addressLocality":"Villa del Parque, CABA","addressCountry":"AR"},"openingHours":"Tu-Su 09:00-23:30","acceptsReservations":"True","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"632"},"sameAs":["https://www.instagram.com/bodegon.lacade/"]}
+</script>
+</head>
+<body>
+
+<!-- ============ INTRO: el escudo que se abre ============ -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__mitad intro__mitad--arriba"><div class="intro__sello"><img src="img/sello.webp" alt="" width="520" height="520"></div></div>
+  <div class="intro__mitad intro__mitad--abajo"><div class="intro__sello"><img src="img/sello.webp" alt="" width="520" height="520"></div></div>
+  <div class="intro__centro">
+    <img class="intro__lcd" src="img/lcd-celeste.svg" alt="" width="461" height="593">
+    <img class="intro__sello-entero" src="img/sello.webp" alt="" width="520" height="520">
+  </div>
+</div>
+
+<a class="saltar" href="#main">Saltar al contenido</a>
+
+<!-- ============ BARRA ============ -->
+<header class="barra" id="barra">
+  <div class="barra__in">
+    <a class="barra__logo" href="#inicio" aria-label="Bodegón LACADÉ, inicio"><span class="logo" aria-hidden="true"></span></a>
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="#sede">La sede</a><a href="#idolos">Ídolos</a><a href="#carta">Carta</a><a href="#ejecutivo">Ejecutivo</a><a href="#regala">Regalá</a><a href="#llegar">Cómo llegar</a>
+    </nav>
+    <div class="barra__acc">
+      <span class="barra__estado" data-estado hidden></span>
+      <button type="button" class="btn btn--reservar" data-kit-open="reservas">Reservá</button>
+      <button type="button" class="barra__menu" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu" data-menu><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <nav class="menu__nav" aria-label="Menú">
+    <a href="#sede" style="--d:1">La sede</a><a href="#idolos" style="--d:2">Ídolos</a><a href="#carta" style="--d:3">Carta</a><a href="#ejecutivo" style="--d:4">Ejecutivo</a><a href="#reservas" style="--d:5">Reservas</a><a href="#regala" style="--d:6">Regalá</a><a href="#llegar" style="--d:7">Cómo llegar</a>
+  </nav>
+  <div class="menu__pie"><span>Nogoyá 3065 · Villa del Parque</span><span>Mar a dom 9 a 23:30 · Lunes cerrado</span></div>
+</div>
+
+<main id="main">
+
+<!-- ============ HERO A: la placa ============ -->
+<section class="hero" id="inicio" data-momento="mediodia" aria-labelledby="hero-t">
+  <div class="hero__placa">
+    <div class="hero__txt">
+      <p class="hero__kicker reveal-h" style="--d:1" data-m-kicker>★ Sede Villa del Parque ★</p>
+      <h1 class="hero__t" id="hero-t"><span class="linea"><span style="--d:2">El bodegón</span></span><span class="linea"><span style="--d:3">de la <em>Academia</em></span></span></h1>
+      <p class="hero__sub reveal-h" style="--d:4" data-m-sub>Milanesas para cuatro, el Gran Bife “Costas” y el Volcán “Chelo Díaz”, en la sede de Racing de Nogoyá 3065. Apto para no socios.</p>
+      <div class="hero__ctas reveal-h" style="--d:5">
+        <button type="button" class="btn btn--noche btn--grande" data-kit-open="reservas" data-m-cta>Reservá tu mesa</button>
+        <a class="btn btn--linea btn--grande" href="#carta" data-m-cta2>Ver la carta</a>
+      </div>
+      <ul class="hero__datos reveal-h" style="--d:6">
+        <li>Almuerzo y cena</li><li>Lunes cerrado</li><li>4,8 ★ en Google (632)</li>
+      </ul>
+      <div class="reloj reveal-h" style="--d:7" role="group" aria-label="La web cambia con la hora del bodegón">
+        <span class="reloj__t">La web cambia con la hora:</span>
+        <button type="button" data-momento-btn="manana">Mañana</button><button type="button" data-momento-btn="mediodia">Mediodía</button><button type="button" data-momento-btn="noche">Noche</button>
+      </div>
+    </div>
+  </div>
+  <figure class="hero__foto">
+    <picture>
+      <source media="(min-width: 900px)" srcset="img/bife-1400.webp" data-m-src-d>
+      <img src="img/bife-800.webp" srcset="img/bife-800.webp 800w, img/bife-1400.webp 1400w" sizes="100vw" alt="Gran Bife Costas con huevo frito, panceta y provoleta sobre mantel a rayas" width="800" height="1067" fetchpriority="high" data-m-img>
+    </picture>
+    <figcaption class="hero__chip" data-m-chip>Gran Bife “Costas” · 600 g · panceta, provoleta y huevo</figcaption>
+  </figure>
+  <img class="hero__sello" src="img/sello.webp" alt="" width="520" height="520">
+  <div class="marquesina" aria-hidden="true">
+    <div class="marquesina__pista">
+      <span>Muchachos… traigan vino, juega Lacadé</span><i>★</i><span>El primer grande</span><i>★</i><span>Acá se juega de local</span><i>★</i><span>Apto no socios</span><i>★</i>
+      <span>Muchachos… traigan vino, juega Lacadé</span><i>★</i><span>El primer grande</span><i>★</i><span>Acá se juega de local</span><i>★</i><span>Apto no socios</span><i>★</i>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LA SEDE ============ -->
+<section class="sede seccion" id="sede" aria-labelledby="sede-t">
+  <div class="contenedor sede__grid">
+    <div class="sede__txt">
+      <p class="kicker reveal">Sede Villa del Parque · Nogoyá 3065</p>
+      <h2 class="titulo" id="sede-t"><span class="linea"><span>La defendimos,</span></span><span class="linea"><span>la honramos y</span></span><span class="linea"><span>ahora la renovamos</span></span></h2>
+      <p class="reveal">El primer bodegón de Racing abrió el 8 de enero en el ex buffet de la sede social de Villa del Parque. Paredes celestes, camisetas enmarcadas, réplicas de las copas y mantel a rayas: acá se juega de local siempre.</p>
+      <p class="reveal">Porciones de bodegón, parrilla, pastas y los platos con nombre de ídolo. No hace falta ser socio para venir; si lo sos, tenés 10 % pagando en efectivo.</p>
+      <svg class="linea-estrella" viewBox="0 0 420 44" aria-hidden="true"><path d="M10 34 H360 Q400 34 400 12" pathLength="1"/><polygon points="10,27 12,32.5 17.5,32.5 13,35.6 14.8,41 10,37.8 5.2,41 7,35.6 2.5,32.5 8,32.5"/><polygon points="400,3 402,8.5 407.5,8.5 403,11.6 404.8,17 400,13.8 395.2,17 397,11.6 392.5,8.5 398,8.5"/></svg>
+      <dl class="sede__datos reveal">
+        <div><dt>150</dt><dd>cubiertos</dd></div>
+        <div><dt>4,8 ★</dt><dd>632 reseñas en Google</dd></div>
+        <div><dt>8/1</dt><dd>abrió en 2026</dd></div>
+      </dl>
+    </div>
+    <div class="sede__collage fila-desliza" data-arrastre>
+      <figure class="foto foto--alta reveal-foto"><img src="img/salon-800.webp" srcset="img/salon-800.webp 800w, img/salon-1400.webp 1400w" sizes="(min-width: 900px) 30vw, 78vw" alt="Salón celeste y blanco con camisetas enmarcadas" width="800" height="1066" loading="lazy" decoding="async"></figure>
+      <figure class="foto reveal-foto"><img src="img/camiseta-800.webp" alt="Camiseta de Racing enmarcada en la pared celeste" width="800" height="1067" loading="lazy" decoding="async"></figure>
+      <figure class="foto reveal-foto"><img src="img/tribuna-800.webp" alt="Cuadro de la tribuna de Racing en el salón" width="800" height="1067" loading="lazy" decoding="async"></figure>
+      <figure class="foto foto--historica reveal-foto"><img src="img/historica-800.webp" alt="Foto histórica de la sede de Racing" width="800" height="1000" loading="lazy" decoding="async"><figcaption>“Acá comenzó todo”</figcaption></figure>
+    </div>
+  </div>
+  <figure class="banda reveal-foto">
+    <img src="img/mozo-1400.webp" srcset="img/mozo-800.webp 800w, img/mozo-1400.webp 1400w" sizes="100vw" alt="Mozo con la remera LACADÉ llevando un plato por el salón lleno" width="1400" height="930" loading="lazy" decoding="async">
+    <figcaption><span class="banda__t">Acá se juega de local</span></figcaption>
+  </figure>
+</section>
+
+<!-- ============ ÁLBUM DE ÍDOLOS ============ -->
+<section class="idolos seccion" id="idolos" aria-labelledby="idolos-t">
+  <div class="contenedor">
+    <div class="cabeza">
+      <div>
+        <p class="kicker kicker--claro reveal">★ El álbum</p>
+        <h2 class="titulo titulo--claro" id="idolos-t"><span class="linea"><span>Los platos de</span></span><span class="linea"><span>los ídolos</span></span></h2>
+      </div>
+      <p class="cabeza__p reveal" data-album-ayuda>Cada plato con nombre de ídolo es una figurita. Las que tienen foto ya las podés ver; las otras son “figuritas difíciles”: hay que probarlas en el bodegón. Tocá una para darla vuelta.</p>
+    </div>
+    <div class="album" data-album aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ CARTA ============ -->
+<section class="carta seccion" id="carta" aria-labelledby="carta-t">
+  <div class="contenedor">
+    <div class="cabeza cabeza--carta">
+      <div>
+        <p class="kicker reveal">La carta · Octubre 2026</p>
+        <h2 class="titulo" id="carta-t"><span class="linea"><span>La N°1 que te sigue</span></span><span class="linea"><span>a todas partes</span></span></h2>
+      </div>
+      <label class="socio reveal">
+        <input type="checkbox" data-socio>
+        <span class="socio__ui" aria-hidden="true"></span>
+        <span class="socio__txt"><b>Soy socio</b><small>Precio con 10 % en efectivo</small></span>
+      </label>
+    </div>
+    <div class="carta__paginas" role="tablist" aria-label="Páginas de la carta" data-paginas></div>
+    <div class="carta__cuerpo" data-carta-cuerpo>
+      <p class="carta__cargando">Cargando la carta…</p>
+    </div>
+    <p class="carta__pie reveal">Medios de pago: efectivo, transferencia o débito · Servicio de mesa $2.500 · Ofrecemos platos sin TACC, veganos y veggies.</p>
+  </div>
+  <div data-kit="carta" hidden></div>
+</section>
+
+<!-- ============ MENÚ EJECUTIVO ============ -->
+<section class="ejecutivo seccion" id="ejecutivo" aria-labelledby="ejec-t">
+  <div class="contenedor ejecutivo__grid">
+    <figure class="ejecutivo__foto reveal-foto"><img src="img/mila-800.webp" srcset="img/mila-800.webp 800w, img/mila-1400.webp 1400w" sizes="(min-width: 900px) 40vw, 90vw" alt="Milanesa servida en bandeja por un mozo de Lacadé" width="800" height="1067" loading="lazy" decoding="async"></figure>
+    <div class="pizarra reveal" data-ejecutivo>
+      <p class="kicker kicker--claro">La pizarra del mediodía</p>
+      <h2 class="titulo titulo--claro" id="ejec-t">Menú ejecutivo</h2>
+      <div class="pizarra__cuerpo" data-ejecutivo-cuerpo></div>
+      <button type="button" class="btn btn--celeste btn--grande" data-kit-open="reservas">Reservá el almuerzo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESERVAS ============ -->
+<section class="reservas seccion" id="reservas" aria-labelledby="res-t">
+  <div class="contenedor reservas__grid">
+    <div class="reservas__txt">
+      <p class="kicker reveal">Reservas</p>
+      <h2 class="titulo" id="res-t"><span class="linea"><span>Reservá</span></span><span class="linea"><span>tu mesa</span></span></h2>
+      <p class="reveal">Almuerzo y cena de martes a domingo, con turnos cada 15 minutos. Los lunes descansamos.</p>
+      <div class="tiempos reveal">
+        <div class="tiempo"><b>Primer tiempo</b><span>Cena 20:00 · 20:15 · 20:30</span></div>
+        <div class="tiempo"><b>Segundo tiempo</b><span>Cena 22:15 · 22:30 · 22:45</span></div>
+      </div>
+      <p class="reveal reservas__nota">La mesa se guarda 15 minutos. Para grupos de más de 12, escribinos por WhatsApp.</p>
+    </div>
+    <div class="reservas__form reveal" data-kit="reservas"></div>
+  </div>
+</section>
+
+<!-- ============ REGALÁ ============ -->
+<section class="regala seccion" id="regala" aria-labelledby="regala-t">
+  <div class="contenedor">
+    <div class="cabeza">
+      <div>
+        <p class="kicker kicker--claro reveal">Regalá Lacadé</p>
+        <h2 class="titulo titulo--claro" id="regala-t"><span class="linea"><span>La gift card es una</span></span><span class="linea"><span>entrada de platea</span></span></h2>
+      </div>
+      <p class="cabeza__p reveal">Elegí el monto, para quién y un mensaje. Se paga con Mercado Pago, te llega un código y vale 60 días para usar en almuerzo, cena o cafetería.</p>
+    </div>
+    <div class="regala__grid">
+      <div class="platea-wrap reveal">
+        <article class="platea" data-platea aria-label="Vista previa de la gift card">
+          <div class="platea__top">
+            <div><span class="platea__k">PLATEA LACADÉ</span><b class="platea__monto" data-p-monto>$50.000</b><span class="platea__k2">GIFT CARD · BODEGÓN</span></div>
+            <img src="img/sello.webp" alt="" width="520" height="520">
+          </div>
+          <div class="platea__cuerpo">
+            <p><b>Para:</b> <span data-p-para>…</span></p>
+            <p><b>De:</b> <span data-p-de>…</span></p>
+            <p class="platea__msg" data-p-msg>“Escribí un mensaje y aparece acá.”</p>
+          </div>
+          <div class="platea__talon"><span class="platea__cod">LCD-····</span><span>VÁLIDA 60 DÍAS</span></div>
+        </article>
+        <p class="platea__ayuda">La entrada se escribe sola mientras completás.</p>
+      </div>
+      <form class="regala__form reveal" data-regala novalidate>
+        <fieldset class="montos">
+          <legend>Monto</legend>
+          <div class="montos__lista" data-montos></div>
+        </fieldset>
+        <div class="campos">
+          <label class="campo"><span>Para</span><input name="para" maxlength="40" autocomplete="off" placeholder="Quién la recibe"></label>
+          <label class="campo"><span>De</span><input name="de" maxlength="40" autocomplete="given-name" placeholder="Quién la regala"></label>
+          <label class="campo campo--full"><span>Mensaje (opcional)</span><textarea name="mensaje" rows="2" maxlength="140" placeholder="Para que vayas a comer al templo. ¡Feliz cumple!"></textarea></label>
+        </div>
+        <p class="regala__error" role="alert" hidden></p>
+        <button class="btn btn--celeste btn--grande" data-regala-btn>Sumar a tus regalos</button>
+      </form>
+    </div>
+    <div class="merch reveal">
+      <div class="merch__cab"><b>¿Algo más para la colección?</b><span>Merch con retiro en el bodegón</span></div>
+      <div class="merch__lista fila-desliza" data-merch data-arrastre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ USTEDES ============ -->
+<section class="ustedes seccion" id="ustedes" aria-labelledby="ust-t">
+  <div class="contenedor">
+    <div class="cabeza">
+      <div>
+        <p class="kicker reveal">Ustedes</p>
+        <h2 class="titulo" id="ust-t"><span class="linea"><span>Estar en casa</span></span><span class="linea"><span>se ve así</span></span></h2>
+      </div>
+      <p class="cabeza__p reveal ustedes__ayuda">Pasá las fotos con el dedo.</p>
+    </div>
+    <div class="galeria" data-galeria>
+      <figure class="g g1 reveal-foto"><img src="img/mesa-1400.webp" srcset="img/mesa-800.webp 800w, img/mesa-1400.webp 1400w" sizes="(min-width: 900px) 50vw, 86vw" alt="Mesa servida desde arriba: entraña, provoleta, empanadas y vino" width="1400" height="930" loading="lazy" decoding="async"></figure>
+      <figure class="g g2 reveal-foto"><img src="img/cielito-800.webp" alt="Trago El cielito de Costas en copa con el logo" width="800" height="1067" loading="lazy" decoding="async"></figure>
+      <figure class="g g3 reveal-foto"><img src="img/fernet-800.webp" alt="Fernetazo en vaso térmico Lacadé" width="800" height="800" loading="lazy" decoding="async"></figure>
+      <figure class="g g4 reveal-foto"><img src="img/provoleta-800.webp" alt="Provoleta con pesto en tabla de madera" width="800" height="1067" loading="lazy" decoding="async"></figure>
+      <figure class="g g5 reveal-foto"><img src="img/neon-800.webp" alt="Fachada de noche con el neón LACADÉ Bodegón" width="640" height="1136" loading="lazy" decoding="async"></figure>
+      <figure class="g g6 reveal-foto"><img src="img/sorrentinos-800.webp" alt="Sorrentinos Académicos con salsa blanca" width="800" height="1067" loading="lazy" decoding="async"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CUMPLE ============ -->
+<section class="cumple" id="cumple" data-cumple aria-labelledby="cumple-t">
+  <div class="contenedor cumple__in reveal">
+    <div class="cumple__rueda" aria-hidden="true"><span class="lcd-mask"></span></div>
+    <div class="cumple__txt">
+      <p class="kicker">Hasta el 30 de noviembre</p>
+      <h2 class="cumple__t" id="cumple-t">Festejá tu cumple y tirá el Cilindro de la Suerte</h2>
+      <p>Vení el día de tu cumple o en los 7 días siguientes, con tu DNI, y llevate el premio que toque. Hasta una camiseta Nike de Racing. Vale para almuerzos y cenas.</p>
+    </div>
+    <button type="button" class="btn btn--noche btn--grande" data-kit-open="reservas">Reservá para el cumple</button>
+  </div>
+</section>
+
+<!-- ============ CÓMO LLEGAR + SUMATE ============ -->
+<section class="llegar seccion" id="llegar" aria-labelledby="llegar-t">
+  <div class="contenedor llegar__grid">
+    <div class="llegar__txt">
+      <p class="kicker reveal">Cómo llegar</p>
+      <h2 class="titulo" id="llegar-t"><span class="linea"><span>Nogoyá 3065</span></span><span class="linea"><span>Villa del Parque</span></span></h2>
+      <p class="reveal">En la sede social de Racing. Estamos abiertos de martes a domingo de 9 a 23:30: cafetería y brunch a la mañana, almuerzo y cena con reserva.</p>
+      <ul class="horarios reveal" data-horarios></ul>
+      <div class="llegar__btns reveal">
+        <a class="btn btn--noche" href="https://www.google.com/maps/search/?api=1&amp;query=Nogoy%C3%A1%203065%2C%20Villa%20del%20Parque%2C%20CABA" target="_blank" rel="noopener">Abrir en Maps</a>
+        <a class="btn btn--linea" href="https://wa.me/5491125902215" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn--linea" href="https://www.instagram.com/bodegon.lacade/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="llegar__mapa reveal-foto">
+      <iframe title="Mapa: Bodegón LACADÉ, Nogoyá 3065" data-src="https://www.google.com/maps?q=Nogoy%C3%A1+3065,+Villa+del+Parque,+Buenos+Aires&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <img class="llegar__neon" src="img/neon-800.webp" alt="El neón LACADÉ de la fachada" width="640" height="1136" loading="lazy" decoding="async">
+    </div>
+  </div>
+  <div class="contenedor sumate reveal">
+    <div><b>Sumate al equipo</b><span>¿Querés trabajar en el bodegón? Escribinos y dejanos tus datos.</span></div>
+    <a class="btn btn--linea" href="https://www.instagram.com/bodegon.lacade/" target="_blank" rel="noopener">Postulate</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="pie">
+  <div class="pie__rayas" aria-hidden="true"></div>
+  <div class="contenedor pie__grid">
+    <div class="pie__marca">
+      <span class="logo logo--pie" aria-hidden="true"></span>
+      <p>El primer bodegón de Racing. Sede Villa del Parque.</p>
+      <img src="img/sello.webp" alt="Sello Bodegón Lacadé, El primer grande" width="520" height="520" loading="lazy" class="pie__sello">
+    </div>
+    <div class="pie__col">
+      <b>Visitanos</b>
+      <span>Nogoyá 3065, Villa del Parque</span>
+      <span>Martes a domingo · 9 a 23:30</span>
+      <span>Lunes cerrado</span>
+    </div>
+    <div class="pie__col">
+      <b>Secciones</b>
+      <a href="#carta">Carta</a><a href="#reservas">Reservas</a><a href="#regala">Gift cards</a><a href="#llegar">Cómo llegar</a>
+    </div>
+    <div class="pie__col">
+      <b>Pagos</b>
+      <span>Efectivo, transferencia o débito</span>
+      <span>Socios: 10 % en efectivo</span>
+      <a href="https://www.instagram.com/bodegon.lacade/" target="_blank" rel="noopener">@bodegon.lacade</a>
+    </div>
+  </div>
+  <div class="contenedor pie__fin">
+    <span>Muchachos… traigan vino, juega Lacadé ★</span>
+    <span class="credito">Sitio desarrollado por <a href="https://alejomfernandez.com.ar" target="_blank" rel="noopener">Alejo Martín Fernández</a></span>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js?v=2"></script>
+</body>
+</html>
