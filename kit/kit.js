@@ -20,12 +20,14 @@ import { estadoAbierto, ahoraEn } from './core/turnos.js';
 import { efectivoHoy } from './core/descuentos.js';
 import { categoriasVisibles, estadoEspecial } from './core/encargos.js';
 import { h, esc } from './core/util.js';
+import { cargadorImagenes } from './core/imagenes.js';
 import { mountCarta } from './modules/carta.js';
+import { tieneVariantes } from './core/variantes.js';
 import { initCarrito } from './modules/carrito.js';
 import { initReservas } from './modules/reservas.js';
 import { initGiftcards } from './modules/giftcards.js';
 
-export const VERSION = '1.4.0';
+export const VERSION = '1.8.0';
 
 export async function cargarConfig(src = 'cliente.json') {
   const url = new URL(src, location.href);
@@ -54,7 +56,7 @@ export async function crearContexto({ config, base }) {
     // { pct, dia, feriado } del descuento en efectivo de hoy (pagos.efectivo)
     efectivoHoy: () => efectivoHoy(config),
     // ¿se puede sumar al carrito? Con "pedidos.sinPrecio": "a_confirmar" también los que no tienen precio.
-    pedible: (p) => !!p && p.disponible !== false && (p.precio != null || config.pedidos?.sinPrecio === 'a_confirmar'),
+    pedible: (p) => !!p && p.disponible !== false && (p.precio != null || tieneVariantes(p) || config.pedidos?.sinPrecio === 'a_confirmar'),
     hoy: () => ahoraEn(config.zonaHoraria).fecha,
     forzarEspecial: null,                                   // id de fecha especial a mostrar sí o sí (pitch: ?sala=pascuas)
     visibles(cats) { return categoriasVisibles(cats, this.hoy(), this.forzarEspecial); },
@@ -64,14 +66,17 @@ export async function crearContexto({ config, base }) {
 }
 
 export async function initKit(opts = {}) {
+  // loader de fotos (brillo + vista previa borrosa) en todas las demos, desde el primer momento; imagenes:false lo apaga
+  const imagenes = opts.imagenes === false ? null : cargadorImagenes(opts.imagenes || {});
   const loaded = await cargarConfig(opts.config);
   const ctx = await crearContexto(loaded);
   if (opts.fechaEspecial) ctx.forzarEspecial = opts.fechaEspecial;
   const M = ctx.config.modulos;
   document.documentElement.classList.add('kit-on', `kit-${ctx.store.modo}`);
+  ctx.imagenes = imagenes;
 
   if (M.carrito) ctx.carrito = initCarrito(ctx, opts.carrito);
-  if (M.carta) ctx.cartas = Array.from(document.querySelectorAll('[data-kit="carta"]')).map(el => mountCarta(el, ctx, opts.carta));
+  if (M.carta) ctx.cartas = Array.from(document.querySelectorAll('[data-kit="carta"]')).map(el => mountCarta(el, ctx, (opts.cartas && el.id && opts.cartas[el.id]) || opts.carta));
   if (M.reservas) ctx.reservas = initReservas(ctx);
   if (M.carrito && ctx.config.giftcards) ctx.giftcards = initGiftcards(ctx);
 

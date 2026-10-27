@@ -12,11 +12,17 @@ import { t } from '../core/i18n.js';
 import { popup, confirmar, toast } from '../core/ui.js';
 import { ahoraEn, horaVisible, aMin, diaSemana, diaNum, fechaDeNum, franjas, generarTurnos, configReservas, serviciosDe, tandaDe, serviciosDelDia } from '../core/turnos.js';
 import { configGiftcards, estadoGiftcard, canjeable, normalizarCodigo } from '../core/giftcards.js';
+import { tieneVariantes, precioDesde } from '../core/variantes.js';
 import { linkWhatsApp } from '../core/pedidos.js';
 import { sucursales } from '../core/sucursales.js';
 import { temporadasDe, seVe } from '../core/temporadas.js';
 import { estadoEspecial, textoRetiro, diasPara } from '../core/encargos.js';
 import { totalTexto } from '../core/pedidos.js';
+import { debounce } from '../core/util.js';
+import { crearQR, qrSVG } from '../core/qr.js';
+import { FORMATOS, ESTILOS, PX_MM_IMPRESION, dibujarTarjeta, paletaTarjeta, jpgDe, pdfHoja, pdfPaginas, descargar } from '../core/tarjeta-qr.js';
+import { paginasCarta, HOJA } from '../core/carta-impresa.js';
+import { filtrarCarta } from '../core/temporadas.js';
 
 const ACTIVOS = ['pendiente', 'confirmado', 'listo'];
 const PAGADO = ['aprobado', 'cobrado'];
@@ -38,6 +44,7 @@ export async function initAdmin(opts = {}) {
     config.modulos.reservas && { id: 'reservas', icono: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
     config.modulos.carta && { id: 'carta', icono: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2Z"/><path d="M9 8h6M9 12h6"/>' },
     config.modulos.carta && (config.modulos.fechas || (config.carta?.categorias || []).some(c => c.especial)) && { id: 'fechas', icono: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="m12 12.6.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3Z"/>' },
+    config.modulos.carta && config.modulos.cartaQR !== false && { id: 'qr', nav: 'qrNav', icono: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.2"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM18 14h2.5M14 18v2.5"/>' },
     config.modulos.carrito && config.giftcards && { id: 'giftcards', icono: '<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M12 8c-1.5-3.5-6.5-3.5-5 0M12 8c1.5-3.5 6.5-3.5 5 0"/>' },
   ].filter(Boolean);
   const GC = configGiftcards(config);
@@ -95,7 +102,7 @@ export async function initAdmin(opts = {}) {
           ${config.marca?.logo ? `<img src="${esc(ctx.asset(config.marca.logoPanel || config.marca.logo))}" alt="${esc(config.nombre)}">` : `<b>${esc(config.nombre)}</b>`}
         </a>
         <nav class="kad-nav" aria-label="${esc(t('panel'))}">
-          ${vistas.map(v => `<a href="#${v.id}" class="kad-nav__a" data-vista="${v.id}"><svg viewBox="0 0 24 24" aria-hidden="true">${v.icono}</svg><span>${esc(t(v.id))}</span><i class="kad-count" data-count="${v.id}" hidden></i></a>`).join('')}
+          ${vistas.map(v => `<a href="#${v.id}" class="kad-nav__a" data-vista="${v.id}"><svg viewBox="0 0 24 24" aria-hidden="true">${v.icono}</svg><span>${esc(t(v.nav || v.id))}</span><i class="kad-count" data-count="${v.id}" hidden></i></a>`).join('')}
         </nav>
         <div class="kad-top__actions">
           ${config.modulos.carrito ? `<button type="button" class="kad-sonido" data-sonido aria-pressed="${!!pref.sonido}" title="${esc(t('sonido'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path class="kad-sonido__on" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/><path class="kad-sonido__off" d="m16 9 6 6M22 9l-6 6"/></svg><span>${esc(t('sonido'))}</span></button>` : ''}
@@ -302,6 +309,7 @@ export async function initAdmin(opts = {}) {
   function chipPago(p) {
     const sinPrecio = p.sinPrecio ?? (p.items || []).some(i => i.precio == null);
     if (sinPrecio && !PAGADO.includes(p.pagoEstado)) return `<span class="kad-chip kad-chip--warn">${esc(t('confirmarPrecio'))}${p.total ? ` · ${esc(totalTexto(p, ctx.money))}` : ''}</span>`;
+    if (p.saldo > 0 && p.pagoEstado === 'aprobado') return `<span class="kad-chip kad-chip--ok">${esc(t('senaPagada', { monto: ctx.money(p.aPagar) }))}</span><span class="kad-chip kad-chip--warn">${esc(t('restoRetirar', { monto: ctx.money(p.saldo) }))}</span>`;
     if (p.pagoEstado === 'aprobado') return `<span class="kad-chip kad-chip--ok">${esc(t('pagadoMP'))}</span>`;
     if (p.pagoEstado === 'cobrado') return `<span class="kad-chip kad-chip--ok">${esc(t('cobrado'))}</span>`;
     if (p.pago === 'mercadopago' && p.pagoEstado === 'pendiente') return `<span class="kad-chip kad-chip--warn">${esc(t('pagoPendMP'))}</span>`;
@@ -321,7 +329,7 @@ export async function initAdmin(opts = {}) {
     else if (p.estado === 'confirmado') accion = `<button type="button" class="kad-accion kad-accion--ok" data-estado="listo">${esc(delivery ? t('listoEnviar') : t('listoRetirar'))}</button>`;
     else if (p.estado === 'listo') accion = `<div class="kad-acciones2">
         ${waAviso ? `<a class="kad-accion kad-accion--ghost" href="${esc(waAviso)}" target="_blank" rel="noopener">${esc(t('avisarListo'))}</a>` : ''}
-        <button type="button" class="kad-accion" data-estado="entregado" ${pagado(p) ? '' : 'data-cobrar="1"'}>${esc(pagado(p) ? t('marcarEntregado') : t('cobradoEntregado'))}</button></div>`;
+        <button type="button" class="kad-accion" data-estado="entregado" ${pagado(p) && !(p.saldo > 0 && p.pagoEstado === 'aprobado') ? '' : 'data-cobrar="1"'}>${esc(p.saldo > 0 && p.pagoEstado === 'aprobado' ? t('cobreResto') : pagado(p) ? t('marcarEntregado') : t('cobradoEntregado'))}</button></div>`;
     const llega = tableroVisto && !yaVistos.has(p.id); yaVistos.add(p.id);
     return `<article class="kad-card kad-card--${p.estado}${llega ? ' is-nueva' : ''}" data-id="${esc(p.id)}">
       <header class="kad-card__head">
@@ -330,7 +338,7 @@ export async function initAdmin(opts = {}) {
       </header>
       ${p.retiro?.fecha ? `<p class="kad-retiro${p.retiro.fecha === hoy() ? ' is-hoy' : p.retiro.fecha < hoy() ? ' is-vencido' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>${esc(t('retira', { cuando: textoRetiro(p.retiro, { dias: t('dias'), hoy: hoy() }) }))}</span></p>` : ''}
       <div class="kad-chips">${chipPago(p)}<span class="kad-chip">${esc(delivery ? t('chipDelivery') : t('chipRetiro'))}</span>${p.sucursal ? `<span class="kad-chip kad-chip--sede">${esc(p.sucursal.nombre)}</span>` : ''}</div>
-      <ul class="kad-items">${(p.items || []).map(i => `<li><b>${i.cant} ×</b> <span>${esc(i.nombre)}${i.precio == null && (p.items || []).some(x => x.precio != null) ? ` <small class="kad-sinprecio">${esc(t('aConfirmar'))}</small>` : ''}${i.nota ? `<em>${esc(i.nota)}</em>` : ''}</span></li>`).join('')}</ul>
+      <ul class="kad-items">${(p.items || []).map(i => `<li><b>${i.cant} ×</b> <span>${esc(i.nombre)}${i.detalle ? ` <em>${esc(i.detalle)}</em>` : ''}${i.precio == null && (p.items || []).some(x => x.precio != null) ? ` <small class="kad-sinprecio">${esc(t('aConfirmar'))}</small>` : ''}${i.nota ? `<em>${esc(i.nota)}</em>` : ''}</span></li>`).join('')}</ul>
       ${p.nota ? `<p class="kad-note"><b>${esc(t('waNota'))}:</b> ${esc(p.nota)}</p>` : ''}
       ${delivery && p.cliente?.direccion ? `<a class="kad-dir" href="${esc(mapsUrl(p.cliente.direccion))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>${esc(p.cliente.direccion)}</b> · ${esc(t('abrirMaps'))}</span></a>` : ''}
       <div class="kad-quien"><span>${esc(nombre)}${p.cliente?.telefono ? ` · ${esc(p.cliente.telefono)}` : ''}</span>${waGen ? `<a href="${esc(waGen)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}</div>
@@ -585,10 +593,11 @@ export async function initAdmin(opts = {}) {
         let v = pct.dataset.pct;
         if (v === 'otro') { v = prompt(t('pctPregunta')); if (!v) return; }
         v = Number(String(v).replace(',', '.')); if (!(v > 0 && v < 500)) return;
-        const items = prods.filter(p => p.categoria === cat.id && p.precio != null);
+        const items = prods.filter(p => p.categoria === cat.id && (p.precio != null || tieneVariantes(p)));
         if (!(await confirmar(t('confirmaPct', { pct: v, n: items.length, cat: cat.nombre }), { ok: `+${v}%` }))) return;
         const red = ctx.pais.decimales ? 1 : 100;
-        for (const p of items) await store.saveProducto({ ...p, precio: Math.round(p.precio * (1 + v / 100) / red) * red });
+        const sube = (n) => n == null ? n : Math.round(n * (1 + v / 100) / red) * red;
+        for (const p of items) await store.saveProducto({ ...p, precio: sube(p.precio), ...(tieneVariantes(p) ? { variantes: p.variantes.map(x => ({ ...x, precio: sube(x.precio) })) } : {}) });
         toast(t('guardado')); render();
       }
     };
@@ -619,7 +628,7 @@ export async function initAdmin(opts = {}) {
       </div>
       ${lista.length ? `<div class="kad-prods-head" aria-hidden="true"><span></span><span>${esc(t('plato'))}</span><span>${esc(t('precio'))}</span><span>${esc(t('hayHoy'))}</span><span></span></div>
       <ul class="kad-prods">${lista.map(p => filaProducto(p, q ? nombreCat(p.categoria) : '')).join('')}</ul>` : `<div class="kit-empty"><p>${esc(q ? t('nadaAca') : t('seccionVacia'))}</p></div>`}
-      ${!q && cat && lista.some(p => p.precio != null) ? `<div class="kad-pct"><b>${esc(t('subirPrecios'))}</b>
+      ${!q && cat && lista.some(p => p.precio != null || tieneVariantes(p)) ? `<div class="kad-pct"><b>${esc(t('subirPrecios'))}</b>
         <button type="button" class="kad-mini kad-mini--ghost" data-pct="5">+ 5%</button><button type="button" class="kad-mini kad-mini--ghost" data-pct="10">+ 10%</button><button type="button" class="kad-mini kad-mini--ghost" data-pct="otro">${esc(t('otroPct'))}</button>
         <span class="kad-muted">${esc(t('redondea', { n: ctx.money(Number(red)) }))}</span></div>` : ''}`;
   }
@@ -629,7 +638,8 @@ export async function initAdmin(opts = {}) {
     return `<li class="kad-prod${p.disponible === false ? ' is-off' : ''}" data-prod="${esc(p.id)}">
           <button type="button" class="kad-prod__img" data-editar aria-label="${esc(t('editar'))} ${esc(p.nombre)}">${p.foto ? `<img src="${esc(ctx.asset(p.foto))}" alt="" loading="lazy" decoding="async">` : `<span>${esc(t('fotoAgregar'))}</span>`}</button>
           <button type="button" class="kad-prod__main" data-editar><b>${esc(p.nombre)}</b>${catTxt ? `<small class="kad-prod__cat">${esc(catTxt)}</small>` : ''}${p.descripcion ? `<span>${esc(p.descripcion)}</span>` : ''}</button>
-          <label class="kad-precio"><span aria-hidden="true">${esc(ctx.pais.simbolo || '$')}</span><input type="text" inputmode="decimal" data-precio value="${p.precio != null ? esc(formatoNumero(p.precio)) : ''}" placeholder="${esc(ph)}" aria-label="${esc(t('precio'))} ${esc(p.nombre)}"></label>
+          ${tieneVariantes(p) ? `<button type="button" class="kad-precio kad-precio--var" data-editar>${esc(p.variantes.map(v => `${v.nombre} ${ctx.money(v.precio) || '—'}`).join(' · '))}</button>`
+            : `<label class="kad-precio"><span aria-hidden="true">${esc(ctx.pais.simbolo || '$')}</span><input type="text" inputmode="decimal" data-precio value="${p.precio != null ? esc(formatoNumero(p.precio)) : ''}" placeholder="${esc(ph)}" aria-label="${esc(t('precio'))} ${esc(p.nombre)}"></label>`}
           <label class="kad-switch"><input type="checkbox" data-disp ${p.disponible !== false ? 'checked' : ''}><span class="kad-switch__ui" aria-hidden="true"></span><span class="kad-switch__txt">${esc(p.disponible !== false ? t('hay') : t('noHay'))}</span></label>
           <span class="kad-prod__fin"><span class="kad-ok" aria-live="polite">${esc(t('guardadoOk'))}</span><button type="button" class="kad-mini kad-mini--ghost" data-editar>${esc(t('editar'))}</button></span>
         </li>`;
@@ -727,8 +737,10 @@ export async function initAdmin(opts = {}) {
         </div>
       </div>
       <label class="kit-field"><span>${esc(t('nombre'))}</span><input name="nombre" required maxlength="80" value="${esc(p0.nombre)}"></label>
+      ${tieneVariantes(p0) ? `<fieldset class="kad-vars"><legend>${esc(t('tamanos'))} (${esc(ctx.pais.moneda)})</legend><div class="kit-field-row">
+        ${p0.variantes.map(v => `<label class="kit-field"><span>${esc(v.nombre)}</span><input data-var="${esc(v.id)}" type="number" inputmode="decimal" min="0" step="${ctx.pais.decimales ? '0.01' : '1'}" value="${v.precio ?? ''}"></label>`).join('')}</div></fieldset>` : ''}
       <div class="kit-field-row">
-        <label class="kit-field"><span>${esc(t('precio'))} (${esc(ctx.pais.moneda)})</span><input name="precio" type="number" inputmode="decimal" min="0" step="${ctx.pais.decimales ? '0.01' : '1'}" value="${p0.precio ?? ''}"></label>
+        ${tieneVariantes(p0) ? '<input name="precio" type="hidden" value="">' : `<label class="kit-field"><span>${esc(t('precio'))} (${esc(ctx.pais.moneda)})</span><input name="precio" type="number" inputmode="decimal" min="0" step="${ctx.pais.decimales ? '0.01' : '1'}" value="${p0.precio ?? ''}"></label>`}
         <label class="kit-field"><span>${esc(t('categoria'))}</span><select name="categoria">${cats.map(c => `<option value="${esc(c.id)}" ${c.id === p0.categoria ? 'selected' : ''}>${esc(c.nombre)}</option>`).join('')}<option value="" ${!p0.categoria ? 'selected' : ''}>${esc(t('sinCategoria'))}</option></select></label>
       </div>
       <label class="kit-field"><span>${esc(t('descripcion'))}</span><textarea name="descripcion" rows="3" maxlength="400">${esc(p0.descripcion)}</textarea></label>
@@ -766,6 +778,7 @@ export async function initAdmin(opts = {}) {
         await store.saveProducto({
           ...(prod || {}), id, nombre, descripcion: f.descripcion.value.trim(),
           precio: f.precio.value === '' ? null : Number(f.precio.value), categoria: f.categoria.value || null,
+          ...(tieneVariantes(p0) ? { variantes: p0.variantes.map(v => { const inp = f.querySelector(`[data-var="${CSS.escape(String(v.id))}"]`); return { ...v, precio: inp && inp.value !== '' ? Number(inp.value) : null }; }) } : {}),
           etiquetas: f.etiquetas.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean),
           disponible: f.disponible.checked, foto, orden: prod?.orden ?? (Math.max(0, ...enCat.map(x => x.orden || 0)) + 1),
         });
@@ -863,6 +876,319 @@ export async function initAdmin(opts = {}) {
     };
   }
 
+  // =====================================================================
+  // QR DE LA CARTA: link fijo a /carta + tarjetas para imprimir con la marca
+  // =====================================================================
+  function urlCarta(sedeId) {
+    const base = opts.cartaUrl || config.cartaQR?.url || new URL('../carta/', location.href).href;
+    const u = new URL(base, location.href);
+    if (sedeId) u.searchParams.set('sede', sedeId); else u.searchParams.delete('sede');
+    return u.href;
+  }
+  const textosQRBase = () => {
+    const ig = String(config.instagram || '').replace(/^@/, '').trim();
+    const host = (() => { try { const u = new URL(urlCarta()); return (u.host + u.pathname).replace(/^www\./, '').replace(/\/$/, ''); } catch (_) { return ''; } })();
+    return { kicker: t('cartaDigital'), titulo: t('qrTitulo'), sub: t('qrSub'), pie: ig ? `@${ig}` : host, ...(config.cartaQR?.textos || {}) };
+  };
+  function prefQR() {
+    pref.qr = pref.qr || {};
+    const q = pref.qr;
+    if (!FORMATOS[q.formato]) q.formato = config.cartaQR?.formato || 'mesa';
+    if (!ESTILOS.includes(q.estilo)) q.estilo = config.cartaQR?.estilo || 'clasico';
+    q.textos = { ...textosQRBase(), ...(q.textos || {}) };
+    if (q.sede && !sucursales(config).some(x => x.id === q.sede)) q.sede = '';
+    return q;
+  }
+
+  // pestañas de la sección: tarjeta con QR | carta completa
+  const tabsImprimir = (Q) => `<div class="kad-seg kad-seg--grande kad-qr__tabs" role="group" aria-label="${esc(t('qrNav'))}">
+    <button type="button" data-qr-modo="tarjeta" aria-pressed="${Q.modo !== 'carta'}">${esc(t('tabTarjeta'))}</button>
+    <button type="button" data-qr-modo="carta" aria-pressed="${Q.modo === 'carta'}">${esc(t('tabCarta'))}</button></div>`;
+  const ocupadoBtn = async (btn, fn) => {
+    if (btn.classList.contains('is-loading')) return;
+    btn.classList.add('is-loading'); btn.disabled = true;
+    try { await fn(); } catch (err) { console.error('[kit] imprimir', err); toast(t('error')); }
+    finally { btn.classList.remove('is-loading'); btn.disabled = false; }
+  };
+  const muestraEstilo = (e) => { const P = paletaTarjeta(config.marca, e); return `<span class="kad-qr__muestra" style="--m-f:${esc(P.fondo)};--m-t:${esc(P.texto)};--m-a:${esc(P.acento)};--m-b:${esc(P.banda || P.fondo)}"><i></i><b></b><u></u></span>`; };
+
+  async function vistaQR(main) {
+    const Q = prefQR();
+    if (Q.modo === 'carta') return vistaCartaImpresa(main, Q);
+    const sedes = sucursales(config);
+    const host = location.hostname;
+    const local = /^(localhost|127\.|192\.168\.|10\.|0\.0\.0\.0|\[::1\])/.test(host) || location.protocol === 'file:';
+    const ico = {
+      mesa: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="11" y="5" width="18" height="27" rx="2"/><rect x="15" y="15" width="10" height="10" rx="1"/><path d="M8 35h24"/></svg>',
+      tent: '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 33 14 8h12l8 25"/><rect x="15" y="15" width="10" height="10" rx="1"/><path d="M4 33h32"/></svg>',
+      sticker: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="7" width="26" height="26" rx="4"/><rect x="14" y="14" width="12" height="12" rx="1"/></svg>',
+    };
+    const fmtTxt = { mesa: ['fmtMesa', 'fmtMesaSub'], tent: ['fmtTent', 'fmtTentSub'], sticker: ['fmtSticker', 'fmtStickerSub'] };
+    const estTxt = { clasico: 'estClasico', marca: 'estMarca', minimal: 'estMinimal' };
+    const muestra = (e) => { const P = paletaTarjeta(config.marca, e); return `<span class="kad-qr__muestra" style="--m-f:${esc(P.fondo)};--m-t:${esc(P.texto)};--m-a:${esc(P.acento)};--m-b:${esc(P.banda || P.fondo)}"><i></i><b></b><u></u></span>`; };
+    const campo = (k, lbl) => `<label class="kit-field"><span>${esc(t(lbl))}</span><input data-qr-campo="${k}" value="${esc(Q.textos[k] || '')}" maxlength="${k === 'titulo' ? 40 : 70}" autocomplete="off"></label>`;
+
+    main.innerHTML = `
+      <div class="kad-head kad-head--row"><h1>${esc(t('qr'))}</h1>${tabsImprimir(Q)}</div>
+      <p class="kad-sub kad-qr__intro">${esc(t('qrIntro'))}</p>
+      ${store.modo === 'demo' ? `<p class="kad-qr__nota">${esc(t('qrDemoNota'))}</p>` : ''}
+      ${local ? `<p class="kad-aviso">${esc(t('qrLocalNota', { host }))}</p>` : ''}
+      <div class="kad-qr">
+        <div class="kad-qr__prev">
+          <div class="kad-qr__mesa" data-qr-mesa><canvas data-qr-canvas aria-label="${esc(t('qrVistaPrevia'))}" role="img"></canvas></div>
+          <div class="kad-qr__acc">
+            <button type="button" class="kit-btn kit-btn--big kit-btn--block kad-qr__pdf" data-qr-pdf><span>${esc(t('descPDF'))}</span><small>${esc(t('descPDFSub'))}</small></button>
+            <div class="kad-qr__acc2">
+              <button type="button" class="kit-btn kit-btn--ghost" data-qr-jpg>${esc(t('descJPG'))}</button>
+              <button type="button" class="kit-btn kit-btn--ghost" data-qr-imprimir>${esc(t('imprimir'))}</button>
+            </div>
+            <button type="button" class="kad-link kad-qr__svg" data-qr-svg>${esc(t('soloQR'))}</button>
+            <p class="kad-muted kad-qr__consejo">${esc(t('qrConsejo'))}</p>
+          </div>
+        </div>
+        <div class="kad-qr__ctrl">
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrLink'))}</h2>
+            <div class="kad-qr__link"><code data-qr-url>${esc(urlCarta(Q.sede))}</code></div>
+            <div class="kad-qr__linkacc">
+              <button type="button" class="kit-btn kit-btn--sm" data-qr-copiar>${esc(t('copiar'))}</button>
+              <a class="kit-btn kit-btn--sm kit-btn--ghost" data-qr-abrir href="${esc(urlCarta(Q.sede))}" target="_blank" rel="noopener">${esc(t('abrirCarta'))} ↗</a>
+            </div>
+            ${sedes.length > 1 ? `<label class="kit-field kad-sede"><span>${esc(t('qrSede'))}</span><select data-qr-sede><option value="">${esc(t('qrGeneral'))}</option>${sedes.map(x => `<option value="${esc(x.id)}"${x.id === Q.sede ? ' selected' : ''}>${esc(x.nombre)}</option>`).join('')}</select></label>` : ''}
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrFormato'))}</h2>
+            <div class="kad-qr__fmts">${Object.keys(FORMATOS).map(f => `<button type="button" class="kad-qr__fmt" data-qr-formato="${f}" aria-pressed="${f === Q.formato}">${ico[f]}<b>${esc(t(fmtTxt[f][0]))}</b><small>${esc(t(fmtTxt[f][1]))}</small></button>`).join('')}</div>
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrEstilo'))}</h2>
+            <div class="kad-qr__ests">${ESTILOS.map(e => `<button type="button" class="kad-qr__est" data-qr-estilo="${e}" aria-pressed="${e === Q.estilo}">${muestra(e)}<b>${esc(t(estTxt[e]))}</b></button>`).join('')}</div>
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrTextos'))}</h2>
+            <div class="kad-qr__campos">${campo('kicker', 'qrKickerLbl')}${campo('titulo', 'qrTituloLbl')}${campo('sub', 'qrSubLbl')}${campo('pie', 'qrPieLbl')}</div>
+            <button type="button" class="kad-link" data-qr-restaurar>${esc(t('qrRestaurar'))}</button>
+          </section>
+        </div>
+      </div>`;
+
+    const canvas = $('[data-qr-canvas]', main), mesa = $('[data-qr-mesa]', main);
+    let turno = 0;
+    async function dibujar() {
+      const yo = ++turno;
+      const [mw] = FORMATOS[Q.formato].mm;
+      const ancho = Math.min(mesa.clientWidth - 48, Q.formato === 'tent' ? 620 : Q.formato === 'sticker' ? 380 : 400);
+      const px = Math.max(2, ancho * Math.min(devicePixelRatio || 1, 2.5) / mw);
+      const tmp = document.createElement('canvas');
+      await dibujarTarjeta(tmp, { formato: Q.formato, estilo: Q.estilo, url: urlCarta(Q.sede), config, textos: Q.textos, asset: ctx.asset, pxPorMm: px });
+      if (yo !== turno || !canvas.isConnected) return;
+      canvas.width = tmp.width; canvas.height = tmp.height;
+      canvas.getContext('2d').drawImage(tmp, 0, 0);
+      canvas.style.width = `${Math.round(ancho)}px`;
+      mesa.dataset.formato = Q.formato;
+      canvas.classList.remove('is-cambiando'); void canvas.offsetWidth; canvas.classList.add('is-cambiando');
+    }
+    const redibujar = debounce(dibujar, 140);
+    const guardar = () => { pref.qr = Q; guardarPref(); };
+    dibujar();
+    if (window.ResizeObserver) { let w0 = mesa.clientWidth; new ResizeObserver(() => { if (Math.abs(mesa.clientWidth - w0) > 8) { w0 = mesa.clientWidth; redibujar(); } }).observe(mesa); }
+
+    // archivo en alta para imprimir
+    async function enAlta() {
+      const c = document.createElement('canvas');
+      await dibujarTarjeta(c, { formato: Q.formato, estilo: Q.estilo, url: urlCarta(Q.sede), config, textos: Q.textos, asset: ctx.asset, pxPorMm: PX_MM_IMPRESION });
+      return c;
+    }
+    const nombreArchivo = (ext) => `${config.id}-qr-${Q.formato}${Q.sede ? `-${Q.sede}` : ''}.${ext}`;
+    async function hacerPDF() {
+      const c = await enAlta(); const jpg = await jpgDe(c);
+      return pdfHoja(jpg, c.width, c.height, Q.formato, { nota: `${config.nombre} · ${t(Q.formato === 'tent' ? 'pdfNotaTent' : 'pdfNota')}`, titulo: `${t('qr')} · ${config.nombre}` });
+    }
+    const ocupado = async (btn, fn) => {
+      if (btn.classList.contains('is-loading')) return;
+      btn.classList.add('is-loading'); btn.disabled = true;
+      try { await fn(); } catch (err) { console.error('[kit] qr', err); toast(t('error')); }
+      finally { btn.classList.remove('is-loading'); btn.disabled = false; }
+    };
+
+    main.oninput = (e) => {
+      const f = e.target.closest('[data-qr-campo]'); if (!f) return;
+      Q.textos[f.dataset.qrCampo] = f.value; guardar(); redibujar();
+    };
+    main.onchange = (e) => {
+      const s = e.target.closest('[data-qr-sede]'); if (!s) return;
+      Q.sede = s.value; guardar();
+      $('[data-qr-url]', main).textContent = urlCarta(Q.sede); $('[data-qr-abrir]', main).href = urlCarta(Q.sede);
+      dibujar();
+    };
+    main.onclick = async (e) => {
+      const md = e.target.closest('[data-qr-modo]');
+      if (md) { if (Q.modo !== md.dataset.qrModo) { Q.modo = md.dataset.qrModo; guardar(); entrar(); render(); } return; }
+      const fm = e.target.closest('[data-qr-formato]');
+      if (fm) { Q.formato = fm.dataset.qrFormato; guardar(); $$('[data-qr-formato]', main).forEach(b => b.setAttribute('aria-pressed', b === fm)); return dibujar(); }
+      const es = e.target.closest('[data-qr-estilo]');
+      if (es) { Q.estilo = es.dataset.qrEstilo; guardar(); $$('[data-qr-estilo]', main).forEach(b => b.setAttribute('aria-pressed', b === es)); return dibujar(); }
+      if (e.target.closest('[data-qr-restaurar]')) {
+        Q.textos = textosQRBase(); guardar();
+        $$('[data-qr-campo]', main).forEach(i => { i.value = Q.textos[i.dataset.qrCampo] || ''; });
+        return dibujar();
+      }
+      if (e.target.closest('[data-qr-copiar]')) {
+        const u = urlCarta(Q.sede);
+        try { await navigator.clipboard.writeText(u); } catch (_) { const r = document.createRange(); r.selectNodeContents($('[data-qr-url]', main)); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand?.('copy'); }
+        toast(t('linkCopiado')); return;
+      }
+      const pdf = e.target.closest('[data-qr-pdf]');
+      if (pdf) return ocupado(pdf, async () => descargar(await hacerPDF(), nombreArchivo('pdf'), 'application/pdf'));
+      const jpg = e.target.closest('[data-qr-jpg]');
+      if (jpg) return ocupado(jpg, async () => descargar(await jpgDe(await enAlta()), nombreArchivo('jpg'), 'image/jpeg'));
+      const imp = e.target.closest('[data-qr-imprimir]');
+      if (imp) {
+        // la ventana se abre en el click (si no, el navegador la bloquea) y después recibe el PDF
+        const w = window.open('', '_blank');
+        return ocupado(imp, async () => {
+          const url = URL.createObjectURL(new Blob([await hacerPDF()], { type: 'application/pdf' }));
+          if (w) w.location.href = url; else descargar(await hacerPDF(), nombreArchivo('pdf'), 'application/pdf');
+          setTimeout(() => URL.revokeObjectURL(url), 120_000);
+        });
+      }
+      if (e.target.closest('[data-qr-svg]')) {
+        const P = paletaTarjeta(config.marca, Q.estilo);
+        const svg = qrSVG(crearQR(urlCarta(Q.sede), { nivel: 'Q' }), { color: P.qrColor, fondo: '#ffffff', margen: 4, lado: 1024 });
+        descargar(new Blob([svg], { type: 'image/svg+xml' }), nombreArchivo('svg'));
+      }
+    };
+  }
+
+  // ---------- CARTA COMPLETA para imprimir / mandar (PDF de varias páginas o JPG por página)
+  async function vistaCartaImpresa(main, Q) {
+    const C = Q.carta = { estilo: 'clasico', columnas: 'auto', descripciones: true, qr: true, sinStock: false, fuera: [], textos: {}, ...(Q.carta || {}) };
+    if (!ESTILOS.includes(C.estilo)) C.estilo = 'clasico';
+    const guardar = () => { pref.qr = Q; guardarPref(); };
+    const [todasCats, todosProds, tmp] = await Promise.all([store.getCategorias(), store.getProductos(), store.getTemporada ? store.getTemporada() : null]);
+    const { cats, prods } = filtrarCarta(todasCats, todosProds, tmp);
+    const visibles = ctx.visibles(cats).filter(c => prods.some(p => p.categoria === c.id));
+    const ig = String(config.instagram || '').replace(/^@/, '').trim();
+    const host = (() => { try { const u = new URL(urlCarta()); return (u.host + u.pathname).replace(/^www\./, '').replace(/\/$/, ''); } catch (_) { return ''; } })();
+    const fecha = new Date().toLocaleDateString(ctx.pais.locale, { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: ctx.tz });
+    const base = () => ({ titulo: t('carta'), sub: t('preciosAl', { fecha }), pie: [ig && `@${ig}`, host].filter(Boolean).join('  ·  '), qr: t('qrPieCarta') });
+    const T = () => ({ ...base(), ...C.textos });
+    const grupos = () => visibles.filter(c => !C.fuera.includes(c.id)).map(c => ({ nombre: c.nombre, items: prods.filter(p => p.categoria === c.id && (C.sinStock || p.disponible !== false)) })).filter(g => g.items.length);
+    const opcs = () => ({ columnas: C.columnas === 'auto' ? 'auto' : Number(C.columnas), descripciones: C.descripciones, qr: C.qr });
+    const armar = (pxPorMm) => paginasCarta({ config, grupos: grupos(), estilo: C.estilo, url: urlCarta(Q.sede), textos: { ...T(), consultar: t('sinPrecio'), pagina: '{n} / {total}' }, opciones: opcs(), money: ctx.money, asset: ctx.asset, pxPorMm });
+    const estTxt = { clasico: 'estClasico', marca: 'estMarca', minimal: 'estMinimal' };
+    const campo = (k, lbl) => `<label class="kit-field"><span>${esc(t(lbl))}</span><input data-ci-campo="${k}" value="${esc(T()[k] || '')}" maxlength="${k === 'titulo' ? 40 : 90}" autocomplete="off"></label>`;
+    const chk = (k, lbl) => `<label class="kit-check"><input type="checkbox" data-ci-opt="${k}"${C[k] ? ' checked' : ''}><span>${esc(t(lbl))}</span></label>`;
+
+    main.innerHTML = `
+      <div class="kad-head kad-head--row"><h1>${esc(t('cartaImpTitulo'))}</h1>${tabsImprimir(Q)}</div>
+      <p class="kad-sub kad-qr__intro">${esc(t('cartaImpIntro'))}</p>
+      <div class="kad-qr kad-ci">
+        <div class="kad-qr__prev">
+          <div class="kad-qr__mesa kad-ci__hojas" data-ci-hojas><p class="kad-muted">${esc(t('generando'))}</p></div>
+          <div class="kad-qr__acc">
+            <button type="button" class="kit-btn kit-btn--big kit-btn--block kad-qr__pdf" data-ci-pdf><span>${esc(t('descPDF'))}</span><small data-ci-n> </small></button>
+            <div class="kad-qr__acc2">
+              <button type="button" class="kit-btn kit-btn--ghost" data-ci-jpg>${esc(t('descJPG'))}</button>
+              <button type="button" class="kit-btn kit-btn--ghost" data-ci-imprimir>${esc(t('imprimir'))}</button>
+            </div>
+            <p class="kad-muted kad-qr__consejo">${esc(t('cartaImpConsejo'))}</p>
+          </div>
+        </div>
+        <div class="kad-qr__ctrl">
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrEstilo'))}</h2>
+            <div class="kad-qr__ests">${ESTILOS.map(e => `<button type="button" class="kad-qr__est" data-ci-estilo="${e}" aria-pressed="${e === C.estilo}">${muestraEstilo(e)}<b>${esc(t(estTxt[e]))}</b></button>`).join('')}</div>
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('ciArmado'))}</h2>
+            <div class="kad-ci__fila"><span class="kad-ci__lbl">${esc(t('ciColumnas'))}</span>
+              <div class="kad-seg" role="group">${['auto', '1', '2'].map(v => `<button type="button" data-ci-cols="${v}" aria-pressed="${String(C.columnas) === v}">${esc(v === 'auto' ? t('ciAuto') : v)}</button>`).join('')}</div></div>
+            <div class="kad-ci__checks">${chk('descripciones', 'ciDescripciones')}${chk('qr', 'ciQR')}${chk('sinStock', 'ciSinStock')}</div>
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('secciones'))}</h2>
+            <div class="kad-ci__secs">${visibles.map(c => `<label class="kad-ci__sec"><input type="checkbox" data-ci-sec="${esc(c.id)}"${C.fuera.includes(c.id) ? '' : ' checked'}><span>${esc(c.nombre)}</span></label>`).join('') || `<p class="kad-muted">${esc(t('ciVacia'))}</p>`}</div>
+          </section>
+          <section class="kad-caja">
+            <h2 class="kad-caja__t">${esc(t('qrTextos'))}</h2>
+            <div class="kad-qr__campos">${campo('titulo', 'qrTituloLbl')}${campo('sub', 'ciSubLbl')}${campo('pie', 'qrPieLbl')}${campo('qr', 'ciQRLbl')}</div>
+            <button type="button" class="kad-link" data-ci-restaurar>${esc(t('qrRestaurar'))}</button>
+          </section>
+        </div>
+      </div>`;
+
+    const hojasEl = $('[data-ci-hojas]', main);
+    let turno = 0;
+    async function dibujar() {
+      const yo = ++turno;
+      if (!grupos().length) { hojasEl.innerHTML = `<p class="kad-muted">${esc(t('ciVacia'))}</p>`; $('[data-ci-n]', main).textContent = ''; return; }
+      const ancho = Math.min(hojasEl.clientWidth - 48, 460);
+      const hojas = await armar(Math.max(1.6, ancho * Math.min(devicePixelRatio || 1, 2) / HOJA[0]));
+      if (yo !== turno || !hojasEl.isConnected) return;
+      hojasEl.replaceChildren(...hojas.map((cv, i) => { cv.style.width = `${Math.round(ancho)}px`; cv.className = 'is-cambiando'; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', `${t('qrVistaPrevia')} ${i + 1}`); return cv; }));
+      $('[data-ci-n]', main).textContent = hojas.length === 1 ? t('ciUnaHoja') : t('ciNHojas', { n: hojas.length });
+    }
+    const redibujar = debounce(dibujar, 180);
+    dibujar();
+    if (window.ResizeObserver) { let w0 = hojasEl.clientWidth; new ResizeObserver(() => { if (Math.abs(hojasEl.clientWidth - w0) > 8) { w0 = hojasEl.clientWidth; redibujar(); } }).observe(hojasEl); }
+
+    const nombre = (ext, i) => `${config.id}-${slug(t('carta'))}${i ? `-${i}` : ''}.${ext}`;
+    async function enAlta() {
+      const hojas = await armar(PX_MM_IMPRESION);
+      const jpgs = [];
+      for (const cv of hojas) jpgs.push({ bytes: await jpgDe(cv, .92), w: cv.width, h: cv.height });
+      return jpgs;
+    }
+    const hacerPDF = async () => pdfPaginas(await enAlta(), HOJA, { titulo: `${t('carta')} · ${config.nombre}` });
+
+    main.oninput = (e) => {
+      const f = e.target.closest('[data-ci-campo]'); if (!f) return;
+      C.textos[f.dataset.ciCampo] = f.value; guardar(); redibujar();
+    };
+    main.onchange = (e) => {
+      const o = e.target.closest('[data-ci-opt]');
+      if (o) { C[o.dataset.ciOpt] = o.checked; guardar(); return dibujar(); }
+      const sc = e.target.closest('[data-ci-sec]');
+      if (sc) { const id = sc.dataset.ciSec; C.fuera = sc.checked ? C.fuera.filter(x => x !== id) : [...C.fuera, id]; guardar(); return dibujar(); }
+    };
+    main.onclick = async (e) => {
+      const md = e.target.closest('[data-qr-modo]');
+      if (md) { if (Q.modo !== md.dataset.qrModo) { Q.modo = md.dataset.qrModo; guardar(); entrar(); render(); } return; }
+      const es = e.target.closest('[data-ci-estilo]');
+      if (es) { C.estilo = es.dataset.ciEstilo; guardar(); $$('[data-ci-estilo]', main).forEach(b => b.setAttribute('aria-pressed', b === es)); return dibujar(); }
+      const co = e.target.closest('[data-ci-cols]');
+      if (co) { C.columnas = co.dataset.ciCols; guardar(); $$('[data-ci-cols]', main).forEach(b => b.setAttribute('aria-pressed', b === co)); return dibujar(); }
+      if (e.target.closest('[data-ci-restaurar]')) {
+        C.textos = {}; guardar();
+        $$('[data-ci-campo]', main).forEach(i => { i.value = T()[i.dataset.ciCampo] || ''; });
+        return dibujar();
+      }
+      const sinNada = () => { if (grupos().length) return false; toast(t('ciVacia')); return true; };
+      const pdf = e.target.closest('[data-ci-pdf]');
+      if (pdf) { if (sinNada()) return; return ocupadoBtn(pdf, async () => descargar(await hacerPDF(), nombre('pdf'), 'application/pdf')); }
+      const jpg = e.target.closest('[data-ci-jpg]');
+      if (jpg) {
+        if (sinNada()) return;
+        return ocupadoBtn(jpg, async () => {
+          const jpgs = await enAlta();
+          for (let i = 0; i < jpgs.length; i++) { descargar(jpgs[i].bytes, nombre('jpg', jpgs.length > 1 ? i + 1 : 0), 'image/jpeg'); if (i < jpgs.length - 1) await new Promise(r => setTimeout(r, 450)); }
+        });
+      }
+      const imp = e.target.closest('[data-ci-imprimir]');
+      if (imp) {
+        if (sinNada()) return;
+        const w = window.open('', '_blank');
+        return ocupadoBtn(imp, async () => {
+          const bytes = await hacerPDF();
+          const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+          if (w) w.location.href = url; else descargar(bytes, nombre('pdf'), 'application/pdf');
+          setTimeout(() => URL.revokeObjectURL(url), 120_000);
+        });
+      }
+    };
+  }
+
   // ---------- contadores + aviso de pedido nuevo
   async function contadores() {
     const [peds, ress] = await Promise.all([
@@ -882,13 +1208,14 @@ export async function initAdmin(opts = {}) {
     $$('[data-vista]', root).forEach(a => { const on = a.dataset.vista === vista; a.classList.toggle('is-on', on); a.setAttribute('aria-current', on ? 'page' : 'false'); });
     main.dataset.pantalla = vista;
     const y = scrollY;
-    main.onclick = null; main.onsubmit = null;
+    main.onclick = null; main.onsubmit = null; main.oninput = null; main.onchange = null;
     try {
       if (vista === 'pedidos') await vistaPedidos(main);
       else if (vista === 'reservas') await vistaReservas(main);
       else if (vista === 'carta') await vistaCarta(main);
       else if (vista === 'fechas') await vistaFechas(main);
       else if (vista === 'giftcards') await vistaGiftcards(main);
+      else if (vista === 'qr') await vistaQR(main);
     } catch (err) { console.error('[kit] panel', err); main.innerHTML = `<p class="kit-error">${esc(t('error'))}</p>`; }
     if (Math.abs(scrollY - y) > 2) scrollTo({ top: y });
     contadores();
@@ -901,7 +1228,7 @@ export async function initAdmin(opts = {}) {
     rt = setTimeout(() => {
       // no repintar con un popup abierto ni mientras se escribe un precio
       if (document.querySelector('.kit-pop') || document.activeElement?.matches?.('[data-precio], [data-buscar], [data-gc-input], [data-gc-monto]')) { contadores(); return; }
-      if (ev?.origen === 'local' && vista === 'carta') { contadores(); return; }   // la carta ya se actualizó en el lugar
+      if ((ev?.origen === 'local' && vista === 'carta') || vista === 'qr') { contadores(); return; }   // la carta ya se actualizó en el lugar · el QR no depende de los datos   // la carta ya se actualizó en el lugar
       render();
       if (ev?.origen !== 'local' && vista !== 'carta') toast(`${t('nuevo')} ✓`);
     }, 120);

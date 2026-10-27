@@ -1,5 +1,5 @@
 // Bodegón LACADÉ · demo — JS propio de la web (el kit maneja datos, carrito, reservas y panel).
-import { initKit } from '../kit/kit.js?v=14';
+import { initKit } from '../kit/kit.js?v=18';
 import { popup } from '../kit/core/ui.js';
 
 const $ = (s, c = document) => c.querySelector(s);
